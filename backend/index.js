@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from "openai";
+import { OpenAI } from 'openai';
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -8,16 +8,13 @@ const port = 8000;
 app.use(bodyParser.json());
 app.use(cors());
 
-const configuration = new Configuration({
-  organization: "org-OM3ItCavBvWVBKj3hFtNVgFR",
-  apiKey: "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",
-});
-const openai = new OpenAIApi(configuration);
+
+const openai = new OpenAI({apiKey:'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'});
 
 app.post("/", async (request, response) => {
   const { chats } = request.body;
 
-  const result = await openai.createChatCompletion({
+  const result = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
       {
@@ -29,7 +26,7 @@ app.post("/", async (request, response) => {
   });
 
   response.json({
-    output: result.data.choices[0].message,
+    output: result.choices[0].message,
   });
 });
 
