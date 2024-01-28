@@ -1,0 +1,311 @@
+[
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_getProfile",
+    "description": "Gets the current user's Gmail profile",
+    "parameters": { "type": "object",
+    "properties": { 
+                  "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+                  "URL": {"type": "string", "description": "Full URL of the HTTP request","enum":["https://gmail.googleapis.com/gmail/v1/users/me/profile"]}            
+                  },
+    "required": ["method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_drafts_create",
+    "description": "Drafts and sends a new email",
+    "parameters": { "type": "object",
+    "properties": {
+       "message": { 
+       "type": "object",
+      "properties": {  
+                    "to": {"type": "string", "description": "Email address of the recepient"},
+                    "from": {"type": "string", "description": "Email address of the sender" },
+                    "subject": {"type": "string", "description": "Subject of the email" },
+                    "content": {"type": "string", "description": "text describing content of the email message"},
+                    "filename": {"type": "string", "description": "full path of the file if the user wants to add an attachment" },
+                    "labelIds": {"type": "array", "items": { "type": "string"}, "description": "List of IDs of labels applied to this draft"},
+                    "threadId": {"type": "string", "description": "The ID of the thread the draft belongs to" }       
+                    }
+                  },
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["POST"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request", "enum":["https://gmail.googleapis.com/gmail/v1/users/me/drafts", "https://gmail.googleapis.com/upload/gmail/v1/users/me/drafts"]}
+                    },
+    "required": ["method", "URL", "message"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_drafts_update",
+    "description": "Update or modify an existing draft email",
+    "parameters": { "type": "object",
+    "properties": {
+       "message": { 
+       "type": "object",
+      "properties": {  
+                    "to": {"type": "string", "description": "Email address of the recepient"},
+                    "from": {"type": "string", "description": "Email address of the sender" },
+                    "subject": {"type": "string", "description": "Subject of the email" },
+                    "content": {"type": "string", "description": "text describing content of the email message"},
+                    "filename": {"type": "string", "description": "full path of the file if the user wants to add an attachment" },
+                    "labelIds": {"type": "array", "items": { "type": "string"}, "description": "List of IDs of labels applied to this draft"},
+                    "threadId": {"type": "string", "description": "The ID of the thread the draft belongs to" }       
+                    }
+                  },
+                  "id": {"type": "string", "description": "The ID of the draft to update"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["PUT"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing draft id", "enum":["https://gmail.googleapis.com/gmail/v1/users/me/drafts/{id}", "https://gmail.googleapis.com/upload/gmail/v1/users/me/drafts/{id}"]}
+                    },
+    "required": ["method", "URL", "message", "id"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_drafts_delete",
+    "description": "Immediately and permanently deletes the specified draft. Does not simply trash it",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the draft to delete"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["DELETE"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing draft id, format https://gmail.googleapis.com/gmail/v1/users/me/drafts/{id}"}
+                  },
+                  "required": ["id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_drafts_get",
+    "description": "Gets the specified draft",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the draft to retrieve"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing draft id, format https://gmail.googleapis.com/gmail/v1/users/me/drafts/{id}"}
+                  },
+                  "required": [ "id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_drafts_list",
+    "description": "Lists the drafts in the user's mailbox",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "maxResults": {"type": "string", "description": "Maximum number of drafts to return. This field defaults to 100. The maximum allowed value for this field is 500"},
+                    "pageToken": {"type": "string", "description": "Page token to retrieve a specific page of results in the list"},
+                    "q": {"type": "string", "description": "Only return draft messages matching the specified query. Supports the same query format as the Gmail search box. For example, 'from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:unread'"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request" ,"enum":["https://gmail.googleapis.com/gmail/v1/users/me/drafts"]}
+                  },
+                  "required": ["method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_labels_create",
+    "description": "Creates a new label",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "name": {"type": "string", "description": "Name of the label"},
+                    "messageListVisibility": {"type": "string", "description": "The visibility of messages with this label in the message list in the Gmail web interface.","enum":["show", "hide"]},
+                    "labelListVisibility": {"type": "string", "description": "The visibility of the label in the label list in the Gmail web interface.","enum":["labelShow", "labelShowIfUnread", "labelHide"]},
+                    "type": {"type": "string", "description": "The owner type for the label.","enum":["system", "user"]},
+                    "color": { "type": "object",
+                              "properties": {
+                                "textColor": {"type": "string", "description": "The text color of the label, represented as hex string"},
+                                "backgroundColor": {"type": "string", "description": "The background color represented as hex string"}
+                               }},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["POST"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request" ,"enum":["https://gmail.googleapis.com/gmail/v1/users/me/labels"]}
+                  },
+                  "required": [ "name", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_labels_update",
+    "description": "Updates the specified label",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the label to update"},
+                    "name": {"type": "string", "description": "Name of the label"},
+                    "messageListVisibility": {"type": "string", "description": "The visibility of messages with this label in the message list in the Gmail web interface.","enum":["show", "hide"]},
+                    "labelListVisibility": {"type": "string", "description": "The visibility of the label in the label list in the Gmail web interface.","enum":["labelShow", "labelShowIfUnread", "labelHide"]},
+                    "type": {"type": "string", "description": "The owner type for the label.","enum":["system", "user"]},
+                    "color": { "type": "object",
+                              "properties": {
+                                "textColor": {"type": "string", "description": "The text color of the label, represented as hex string"},
+                                "backgroundColor": {"type": "string", "description": "The background color represented as hex string"}
+                               }},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["PUT"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing the label id, format https://gmail.googleapis.com/gmail/v1/users/me/labels/{id}"}
+                  },
+                  "required": [ "id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_labels_get",
+    "description": "Gets the specified label",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the label to retrieve"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing label id, format: https://gmail.googleapis.com/gmail/v1/users/me/labels/{id}" }
+                  },
+                  "required": [ "id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_labels_delete",
+    "description": "Immediately and permanently deletes the specified label and removes it from any messages and threads that it is applied to",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the label to delete"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["DELETE"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing label id, format: https://gmail.googleapis.com/gmail/v1/users/me/labels/{id}" }
+                  },
+                  "required": [ "id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_labels_list",
+    "description": "Lists all labels in the user's mailbox",
+    "parameters": { "type": "object",
+    "properties": { 
+              "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+              "URL": {"type": "string", "description": "Full URL of the HTTP request",  "enum":["https://gmail.googleapis.com/gmail/v1/users/me/labels"] }
+              },
+              "required": [ "method", "URL"]}
+              }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_messages_trash",
+    "description": "Moves the specified message to the trash",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the message to trash"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["POST"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing the message id, format: https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}/trash"}
+                  },
+                  "required": [ "id", "method", "URL"]}
+                } },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_messages_get",
+    "description": "Gets the specified message",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the message to retrieve"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing the message id, format: https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}"}
+                  },
+                  "required": [ "id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_messages_list",
+    "description": "Lists the messages in the user's mailbox",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "maxResults": {"type": "string", "description": "Maximum number of messages to return. This field defaults to 100. The maximum allowed value for this field is 500"},
+                    "pageToken": {"type": "string", "description": "Page token to retrieve a specific page of results in the list"},
+                    "q": {"type": "string", "description": "Only return messages matching the specified query. Supports the same query format as the Gmail search box. For example, 'from:someuser@example.com rfc822msgid:<somemsgid@example.com> is:unread'"},
+                    "labelIds": {"type": "array", "items": { "type": "string"}, "description": "Only return messages with labels that match all of the specified label IDs"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request", "enum":["https://gmail.googleapis.com/gmail/v1/users/me/messages"]}
+                  },
+                  "required": [ "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_messages_modify",
+    "description": "Modifies the labels on the specified message",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the message to modify"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["POST"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing message id, format: https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}/modify"}
+                 },
+                  "required": [ "id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_threads_trash",
+    "description": "Moves the specified thread to the trash. Any messages that belong to the thread are also moved to the trash",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the thread to trash"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["POST"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing message id, format: https://gmail.googleapis.com/gmail/v1/users/me/threads/{id}/trash"}
+                  },
+                  "required": [ "id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_threads_get",
+    "description": "Gets the specified thread",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the thread to retrieve"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing message id, format: https://gmail.googleapis.com/gmail/v1/users/me/threads/{id}"}
+                  },
+                  "required": [ "id", "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_threads_list",
+    "description": "Lists the threads in the user's mailbox",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "maxResults": {"type": "string", "description": "Maximum number of threads to return. This field defaults to 100. The maximum allowed value for this field is 500"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["GET"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request",  "enum":["https://gmail.googleapis.com/gmail/v1/users/me/threads"]},
+                    "labelIds": {"type": "array", "items": { "type": "string"}, "description": "Only return threads with labels that match all of the specified label IDs"}
+                  },
+                  "required": [ "method", "URL"]}
+                }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail_users_threads_modify",
+    "description": "Modifies the labels applied to the thread. This applies to all messages in the thread",
+    "parameters": { "type": "object",
+    "properties": { 
+                    "id": {"type": "string", "description": "The ID of the thread to modify"},
+                    "method": {"type": "string", "description": "HTTP API method to call" ,"enum":["POST"]},
+                    "URL": {"type": "string", "description": "Full URL of the HTTP request containing thread id, format: https://gmail.googleapis.com/gmail/v1/users/me/threads/{id}/modify"}
+                  },
+                  "required": [ "id", "method", "URL"]}
+                }
+  }
+  ]

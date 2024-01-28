@@ -1,0 +1,55 @@
+[
+  {
+    "type": "function",
+    "function": {
+    "name": "retrieval",
+    "description": "This is OpenAI retrieval and code interpretation assistant that also does the file handling operations, including reading, displaying, writing and retrieving data to files or from files",
+    "parameters": { "type": "object",  
+    "properties": {
+                  "task": {"type": "string", "description": "the detailed task description fully explaining the file handling action"},
+                  "extra_info":   { "type": "string","description": "extra information, if any, related to the task. Usually full content that should be retrieved or written to files or from files" }
+                  },
+                  "required": ["task"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "hubspot",
+    "description": "Create, read, update and delete objects in hubspot CRM",
+    "parameters": { "type": "object",  
+    "properties": {
+                  "task": {"type": "string", "description": "the detailed task description fully explaining the action to be performed in hubspot CRM"},
+                  "extra_info":   { "type": "string","description": "extra information, if any, related to the task" }
+                  },
+                  "required": ["task"]}
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "slack",
+    "description": "Use slack api for interaction and communication in slack",
+    "parameters": { "type": "object",
+    "properties": {
+                  "task": {"type": "string", "description": "the detailed task description fully explaining the action to be performed in slack"},
+                  "extra_info":   { "type": "string","description": "extra information, if any, related to the task" }
+                  },
+                  "required": ["task"]}
+              }
+  },
+  {
+    "type": "function",
+    "function": {
+    "name": "gmail",
+    "description": "Use gmail api for email communication and managing mailbox",
+    "parameters": { "type": "object",
+    "properties": {
+                  "task": {"type": "string", "description": "the detailed task description fully explaining the action to be performed in gmail"},    
+                  "extra_info":   { "type": "string","description": "extra information, if any, related to the task" }
+                  },
+                  "required": ["task"]}
+              }
+  }      
+  ]
