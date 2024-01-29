@@ -13,15 +13,14 @@ const openai = new OpenAI({apiKey:'sk-PU85uqkDiBTSVkijSoXST3BlbkFJifYoKDWk7z4qFJ
 
 app.post("/", async (request, response) => {
   const { chats } = request.body;
-
+  console.log(request.body)
   const result = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
       {
         role: "system",
-        content: "You are a EbereGPT. You can help with graphic design tasks",
+        content: request.body.message
       },
-      ...chats,
     ],
   });
 

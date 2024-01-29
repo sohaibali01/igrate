@@ -17,6 +17,7 @@ function App() {
     msgs.push({ role: "user", content: message });
     setChats(msgs);
 
+    let msgCopy = message;
     setMessage("");
 
     fetch("http://localhost:8000/", {
@@ -24,9 +25,7 @@ function App() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        chats,
-      }),
+      body: JSON.stringify( {message: msgCopy}),
     })
       .then((response) => response.json())
       .then((data) => {
