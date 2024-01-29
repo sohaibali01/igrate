@@ -18,7 +18,7 @@ app.post("/", async (request, response) => {
   let jsonPrompt = `{"task":"${request.body.message}"}`;
   await agent.processPrompt(jsonPrompt, null);
 
-  let msg = {role: "Gloabl Assistant", content: agent.messages[agent.messages.length - 1][3].reverse()[0]};
+  let msg = {role: "Global Assistant", content: agent.messages[agent.messages.length - 1][3].reverse()[0]};
   response.json({
     output: msg,
   });

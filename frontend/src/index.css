@@ -40,6 +40,7 @@ p{
 }
 
 p span{
+  white-space: pre-wrap;
   margin: 5px;
 }
 
