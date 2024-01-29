@@ -59,7 +59,7 @@ function App() {
 
       <div className={isTyping ? "" : "hide"}>
         <p>
-          <i>{isTyping ? "Typing" : ""}</i>
+          <i>{isTyping ? "Thinking..." : ""}</i>
         </p>
       </div>
 

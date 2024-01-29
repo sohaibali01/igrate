@@ -4,7 +4,7 @@ import { SlackClient } from './client_slack.js';
 import { GmailClient } from './client_gmail.js';
 import { readFileSync } from 'fs';
 
-class AutomationAgent {
+export class AutomationAgent {
 
   constructor() {
     this.gmailClient = new GmailClient();
@@ -55,7 +55,7 @@ class AutomationAgent {
     }
   }
 
-    async processPrompt(task, agentType = null) {
+    async processPrompt(task, agentType) {
       if (agentType === null) {
           await this.processPrompt( task, agentType = "global" );
           return;
@@ -129,22 +129,22 @@ class AutomationAgent {
   }
 }
 
-async function main() {
-  try {
+// async function main() {
+//   try {
 
-       const agent = new AutomationAgent();
-       await agent.create();
-       let prompt = "delete the last draft from my gmail inbox";
-       let jsonPrompt = `{"task":"${prompt}"}`;
-       await agent.processPrompt(jsonPrompt);
+//        const agent = new AutomationAgent();
+//        await agent.create();
+//        let prompt = "delete the last draft from my gmail inbox";
+//        let jsonPrompt = `{"task":"${prompt}"}`;
+//        await agent.processPrompt(jsonPrompt);
 
 
-  } catch (e) {
-      console.error(e.toString());
-      return;
-  }
-}
+//   } catch (e) {
+//       console.error(e.toString());
+//       return;
+//   }
+// }
 
-// Usage
-await main();
+// // Usage
+// await main();
 
