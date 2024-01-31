@@ -3,6 +3,8 @@ import { HubspotClient } from './client_hubspot.js';
 import { SlackClient } from './client_slack.js';
 import { GmailClient } from './client_gmail.js';
 import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 export class AutomationAgent {
 
@@ -14,11 +16,11 @@ export class AutomationAgent {
 
   async create(){
     const apps = {
-      global: "Your goal is to store data and assist user in general queries and interaction with different computer applications. If the user wants you to perform some action with computer applications, only then call provided functions in a specific order to achieve given task. In order to do that, figure out the data dependency between provided functions first before determining the order of function calling",
+      global: "Your goal is to store data and assist user in general queries and interaction with different computer applications. If the user wants you to perform some action with computer applications, only then call provided functions in a specific order to achieve given task.",
       slack: "Your goal is to assist user in interaction with slack api.",
       hubspot: "Your goal is to perform queries with hubspot CRM.",
       gmail: "Your goal is to assist user in general queries and email communication using gmail api. Figure out dependency between function parameters first and then call the provided functions in a specific order to complete the given task. Do not call functions in parallel or use functions that are not given to you",
-      retrieval: "Your goal is to assist user in general queries, information retrieval and file handling operations"
+      file: "Your goal is to store and analyze data, assist user in general queries and file handling operations including reading data from files or writing data to files"
     };
 
     await this.hubspotClient.authorize('pat-eu1-9da6d3a7-04fd-4a72-853c-3f5d239b805d');
@@ -30,9 +32,12 @@ export class AutomationAgent {
     this.messages = [];
     this.lastAssistantMessage = "";
 
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+
     this.functionsApp = {};
     for (const appname in apps) {
-      this.functionsApp[appname] = JSON.parse(readFileSync(`functions_${appname}.json`, 'utf-8'));
+      this.functionsApp[appname] = JSON.parse(readFileSync(__dirname+`/functions_${appname}.json`, 'utf-8'));
     }
 
     this.assistants = {};
@@ -134,9 +139,9 @@ export class AutomationAgent {
 
 //        const agent = new AutomationAgent();
 //        await agent.create();
-//        let prompt = "delete the last draft from my gmail inbox";
+//        let prompt = "tell me a long story about imran khan in three paragraphs";
 //        let jsonPrompt = `{"task":"${prompt}"}`;
-//        await agent.processPrompt(jsonPrompt);
+//        await agent.processPrompt(jsonPrompt, null);
 
 
 //   } catch (e) {

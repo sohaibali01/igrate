@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
-  background-color: #f0efef;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,7 +24,7 @@ h1 {
   text-align: center;
   position: sticky;
   top: 0;
-  background-color: #d7d7d7;
+  background-color: rgb(244, 243, 238);
 }
 
 main{
@@ -33,7 +33,7 @@ main{
 }
 
 p{
-  background-color: rgb(198, 249, 249);
+  background-color: rgb(166, 231, 120);
   max-width: 70%;
   padding: 15px;
   border-radius: 50px;
@@ -74,7 +74,7 @@ input{
   border: none;
   padding: 10px;
   font-size: 1.2rem;
-  background-color: rgb(230, 220, 220);
+  background-color: rgb(244, 243, 238);
 }
 
 input:focus{

@@ -54,7 +54,7 @@ export class GptAssistant {
                 instructions: instructions,
                 tools: functionList,
                 // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
-                file_ids: name === 'retrieval' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
+                file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
             });
         } else {
             this.assistant = await gptClient.beta.assistants.update(assistantID, {
@@ -62,7 +62,7 @@ export class GptAssistant {
                 instructions: instructions,
                 tools: functionList,
                 // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
-                file_ids: name === 'retrieval' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
+                file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
             });
         }
 

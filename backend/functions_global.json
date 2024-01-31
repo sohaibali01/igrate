@@ -2,12 +2,12 @@
   {
     "type": "function",
     "function": {
-    "name": "retrieval",
-    "description": "This is OpenAI retrieval and code interpretation assistant that also does the file handling operations, including reading, displaying, writing and retrieving data to files or from files",
+    "name": "file",
+    "description": "This function reads data from files and also write data to files",
     "parameters": { "type": "object",  
     "properties": {
                   "task": {"type": "string", "description": "the detailed task description fully explaining the file handling action"},
-                  "extra_info":   { "type": "string","description": "extra information, if any, related to the task. Usually full content that should be retrieved or written to files or from files" }
+                  "extra_info":   { "type": "string","description": "extra information, if any, related to the task. Usually full content that should be retrieved from files or written to files" }
                   },
                   "required": ["task"]
       }
