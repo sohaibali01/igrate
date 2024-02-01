@@ -25,10 +25,11 @@ h1 {
   position: sticky;
   top: 0;
   background-color: rgb(244, 243, 238);
+  color: #007bff;
 }
 
 main{
-  max-width: 800px;
+  max-width: 100%;
   margin: auto;
 }
 
@@ -37,6 +38,7 @@ p{
   max-width: 70%;
   padding: 15px;
   border-radius: 50px;
+  margin: 5px 0;
 }
 
 p span{
@@ -55,6 +57,13 @@ p span:first-child{
   flex-direction: row-reverse;
 }
 
+.assistant_msg{
+  text-align: left;
+  margin-right: 30%;
+  display: flex;
+}
+
+
 .hide {
   visibility: hidden;
   display: none;
@@ -64,6 +73,9 @@ form{
   text-align: center;
   position: sticky;
   bottom: 0;
+  margin-top: 20px;
+  display: flex;
+  align-items: center; /* Center the input and file upload button vertically */
 }
 
 input{
@@ -75,8 +87,63 @@ input{
   padding: 10px;
   font-size: 1.2rem;
   background-color: rgb(244, 243, 238);
+  box-sizing: border-box;
 }
 
 input:focus{
   outline: none;
+}
+
+/* MyComponent.css */
+
+.container {
+  text-align: center;
+}
+
+.columns-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.left-column {
+  width: 30%;
+  position: sticky;
+  top: 20px; /* Adjust the top position as needed */
+}
+
+.right-column {
+  width: 65%;
+}
+
+
+section {
+  margin-top: 20px;
+}
+
+
+.button-container {
+  text-align: center;
+  position: sticky;
+}
+
+
+input[type="text"] {
+  width: 70%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-right: 10px;
+}
+
+.file-upload-label {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.file-upload-label:hover {
+  background-color: #0056b3;
 }

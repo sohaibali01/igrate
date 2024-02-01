@@ -139,7 +139,7 @@ export class AutomationAgent {
 
 //        const agent = new AutomationAgent();
 //        await agent.create();
-//        let prompt = "tell me a long story about imran khan in three paragraphs";
+//        let prompt = "tell me a story about yourself";
 //        let jsonPrompt = `{"task":"${prompt}"}`;
 //        await agent.processPrompt(jsonPrompt, null);
 

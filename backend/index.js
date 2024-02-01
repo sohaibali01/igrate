@@ -15,10 +15,17 @@ await agent.create();
 //const openai = new OpenAI({apiKey:'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'});
 
 app.post("/", async (request, response) => {
-  let jsonPrompt = `{"task":"${request.body.message}"}`;
-  await agent.processPrompt(jsonPrompt, null);
-
-  let msg = {role: "Global Assistant", content: agent.messages[agent.messages.length - 1][3].reverse()[0]};
+  let msg;
+  try 
+  { 
+    let jsonPrompt = `{"task":"${request.body.message}"}`;
+    await agent.processPrompt(jsonPrompt, null);
+    msg = {role: "Global Assistant", content: agent.messages[agent.messages.length - 1][3].reverse()[0]};
+  }
+  catch(e)
+  {
+    msg = {role: "Global Assistant", content: "Error occured, try again :("};
+  }
   response.json({
     output: msg,
   });
