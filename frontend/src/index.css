@@ -5,7 +5,10 @@
 
   color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
-  background-color: #ffffff;
+  background-color: #f0f0f0; /* Off-white background color */
+  background-image: url('https://images.unsplash.com/photo-1531685250784-7569952593d2'); /* Publicly available image from Unsplash */
+  background-repeat: repeat; /* Repeat the background image */
+  background-size: cover; /* Cover the entire background */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -19,13 +22,22 @@ html, body{
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 1.9em;
   line-height: 1.1;
   text-align: center;
   position: sticky;
   top: 0;
-  background-color: rgb(244, 243, 238);
+  padding: 10px; /* Add padding for better visibility */
+  background-color: rgba(243, 240, 240, 0.3); /* Off-white background color with 70% transparency */
   color: #007bff;
+}
+
+.logo {
+  display: block;
+  font-family: 'Montserrat', sans-serif; /* Use Montserrat font */
+  font-weight: 700; /* Bold */
+  font-size: 2em; /* Adjust the size as needed */
+  margin-bottom: 10px; /* Add vertical space if needed */
 }
 
 main{
@@ -100,6 +112,34 @@ input:focus{
   text-align: center;
 }
 
+.horizontal-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.sub-container {
+  width: 30%;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease; /* Add transition property */
+}
+
+.sub-container:hover {
+  transform: scale(1.05); /* Scale up when hovered */
+}
+
+.sub-container h2 {
+  color: #007bff;
+}
+
+.sub-container p {
+  margin-top: 10px;
+}
+
 .columns-container {
   display: flex;
   justify-content: space-between;
@@ -107,10 +147,83 @@ input:focus{
   padding: 20px;
 }
 
-.left-column {
+.left-container {
   width: 30%;
   position: sticky;
-  top: 20px; /* Adjust the top position as needed */
+  top: 150px;
+  background-color: rgba(243, 240, 240, 0.7); /* Off-white background color with 70% transparency */
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease; /* Add transition property for smooth animation */
+}
+
+.left-container:hover {
+  transform: scale(1.05); /* Scale up when hovered */
+}
+
+.left-heading {
+  text-align: center;
+}
+
+.bullet-points-container {
+  margin: 0 20px;
+  width: 90%;
+  text-align: center;
+}
+
+.left-content li {
+  margin: 10px 0;
+  text-align: left;
+}
+
+.left-content a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.left-content a:hover {
+  text-decoration: underline;
+}
+
+.left-content input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  font-size: 0.9em; /* Adjust the font size as needed */
+  background-color: rgb(210, 210, 210); /* Off-white background color with 70% transparency */
+}
+
+.styled-button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: relative;
+  margin-top: 10px; /* Add vertical spacing between input and button */
+}
+
+.styled-button:hover {
+  background-color: #0056b3;
+}
+
+.authenticated {
+  background-color: #28a745;
+}
+
+.thumbs-up {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #28a745;
 }
 
 .right-column {
@@ -139,11 +252,31 @@ input[type="text"] {
 .file-upload-label {
   cursor: pointer;
   padding: 10px;
-  background-color: #007bff;
+  background-color: #128C7E; /* WhatsApp green */
   color: #fff;
   border-radius: 5px;
 }
 
 .file-upload-label:hover {
   background-color: #0056b3;
+}
+
+.send-button {
+  background-color: #128C7E; /* WhatsApp green */
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  padding: 8px;
+  margin-right: 5px; /* Adjust spacing as needed */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+  background-color: #075E54; /* Darker shade on hover */
+}
+
+.send-button svg {
+  width: 20px;
+  height: 20px;
 }
