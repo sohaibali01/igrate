@@ -5,8 +5,15 @@ function App() {
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [authenticated, setAuthenticated] = useState(false);
-  
+  const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
+  const [showOpenAIEmoji, setOpenAIEmoji] = useState(false);
+  const [gmailAuthenticated, setGmailAuthenticated] = useState(false);
+  const [showGmailEmoji, setGmailEmoji] = useState(false);
+  const [slackAuthenticated, setSlackAuthenticated] = useState(false);
+  const [showSlackEmoji, setSlackEmoji] = useState(false);
+  const [hubspotAuthenticated, setHubspotAuthenticated] = useState(false);
+  const [showHubspotEmoji, setHubspotEmoji] = useState(false);
+
   const chat = async (e, message) => {
     e.preventDefault();
 
@@ -46,11 +53,54 @@ function App() {
     console.log('Files uploaded:', files);
   };
 
-  const handleAuthenticate = () => {
-    setAuthenticated(true);
+  const handleOpenAIAuthenticate = () => {
+    if (!openAIAuthenticated) {
+      setOpenAIAuthenticated(true);
+      setOpenAIEmoji(true); // Show thumbs-up on the first authentication
+    }
+    else setOpenAIAuthenticated(false);
   };
 
-  const handleJsonInputChange = (e) => {
+  const handleGmailAuthenticate = () => {
+    if (!gmailAuthenticated) {
+      setGmailAuthenticated(true);
+      setGmailEmoji(true); // Show thumbs-up on the first authentication
+    }
+    else setGmailAuthenticated(false);
+  };
+
+  const handleSlackAuthenticate = () => {
+    if (!slackAuthenticated) {
+      setSlackAuthenticated(true);
+      setSlackEmoji(true); // Show thumbs-up on the first authentication
+    }
+    else setSlackAuthenticated(false);
+  };
+
+  const handleHubspotAuthenticate = () => {
+    if (!hubspotAuthenticated) {
+      setHubspotAuthenticated(true);
+      setHubspotEmoji(true); // Show thumbs-up on the first authentication
+    }
+    else setHubspotAuthenticated(false);
+  };
+
+  const handleOpenAIJsonInputChange = (e) => {
+    // Handle JSON input change logic here
+    // You can use e.target.value to get the input value
+  };
+
+  const handleGmailJsonInputChange = (e) => {
+    // Handle JSON input change logic here
+    // You can use e.target.value to get the input value
+  };
+
+  const handleSlackJsonInputChange = (e) => {
+    // Handle JSON input change logic here
+    // You can use e.target.value to get the input value
+  };
+
+  const handleHubspotJsonInputChange = (e) => {
     // Handle JSON input change logic here
     // You can use e.target.value to get the input value
   };
@@ -62,46 +112,154 @@ function App() {
     </h1>
 
       <div className="horizontal-container">
-        <div className="sub-container">
-          <h2>Sub-container 1</h2>
-          <p>Content for sub-container 1</p>
+        <div className="api-container">
+            <div className="api-heading">
+              <h2>Gmail</h2>
+            </div>
+            <div className="api-content">         
+              <div className="bullet-points-container">
+                <li> Create <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a> in google using OAuth 2.0 Client IDs (for desktop clients)
+                </li>
+                <li> Download the credentials, copy the json content below and hit Authenticate
+                </li>
+              </div>
+              <input
+                  type="text"
+                  placeholder="Enter json credentials ..."
+                  onChange={handleGmailJsonInputChange}
+                />
+            </div>
+            <div className="authentication-container">
+              <button
+                className="styled-button"
+                onClick={handleGmailAuthenticate}
+              > Authenticate
+              </button>
+                <div className="emoji-buttons">
+                  {showGmailEmoji && gmailAuthenticated ? (
+                    <button className="thumbs-up">
+                      <span>&#10060;</span>
+                    </button>
+                  ) : (
+                    <button className="thumbs-down">
+                    <span>&#128077;&#127997;</span>
+                    </button>
+                  )}
+                </div>
+          </div>
         </div>
-        <div className="sub-container">
-          <h2>Sub-container 2</h2>
-          <p>Content for sub-container 2</p>
+        <div className="api-container">
+            <div className="api-heading">
+              <h2>Slack</h2>
+            </div>
+            <div className="api-content">         
+              <div className="bullet-points-container">
+                <li> Create your slack <a href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer"> app </a>
+                </li>
+                <li> Select your app <span>&#x2192;</span> "OAuth & Permissions" <span>&#x2192;</span> "User Token Scopes" <span>&#x2192;</span> select your scopes <span>&#x2192;</span> "Reinstall to workspace" <span>&#x2192;</span> paste token below and hit Authenticate
+                </li>
+              </div>
+              <input
+                  type="text"
+                  placeholder="Enter api key ..."
+                  onChange={handleSlackJsonInputChange}
+                />
+            </div>
+            <div className="authentication-container">
+              <button
+                className="styled-button"
+                onClick={handleSlackAuthenticate}
+              > Authenticate
+              </button>
+                <div className="emoji-buttons">
+                  {showSlackEmoji && slackAuthenticated ? (
+                    <button className="thumbs-up">
+                      <span>&#10060;</span>
+                    </button>
+                  ) : (
+                    <button className="thumbs-down">
+                    <span>&#128077;&#127997;</span>
+                    </button>
+                  )}
+                </div>
+          </div>
         </div>
-        <div className="sub-container">
-          <h2>Sub-container 3</h2>
-          <p>Content for sub-container 3</p>
+        <div className="api-container">
+            <div className="api-heading">
+              <h2>Hubspot</h2>
+            </div>
+            <div className="api-content">         
+              <div className="bullet-points-container">
+                <li> Create your hubspot <a href="https://developers.hubspot.com/docs/api/private-apps" target="_blank" rel="noopener noreferrer"> app </a>
+                </li>
+                <li> Login to your hubspot account <span>&#x2192;</span> Settings <span>&#x2192;</span> Integration <span>&#x2192;</span> Private apps <span>&#x2192;</span> select app <span>&#x2192;</span> paste access token below and hit Authenticate
+                </li>
+              </div>
+              <input
+                  type="text"
+                  placeholder="Enter api key ..."
+                  onChange={handleHubspotJsonInputChange}
+                />
+            </div>
+            <div className="authentication-container">
+              <button
+                className="styled-button"
+                onClick={handleHubspotAuthenticate}
+              > Authenticate
+              </button>
+                <div className="emoji-buttons">
+                  {showHubspotEmoji && hubspotAuthenticated ? (
+                    <button className="thumbs-up">
+                      <span>&#10060;</span>
+                    </button>
+                  ) : (
+                    <button className="thumbs-down">
+                    <span>&#128077;&#127997;</span>
+                    </button>
+                  )}
+                </div>
+          </div>
         </div>
       </div>
 
       <div className="columns-container">
-      <div className="left-container">
-          <div className="left-heading">
-            <h2>OpenAI</h2>
+        <div className="api-container">
+            <div className="api-heading">
+              <h2>OpenAI</h2>
+            </div>
+            <div className="api-content">         
+            <div className="bullet-points-container">
+              <li> Go to <a href="https://platform.openai.com/account/billing/overview" target="_blank" rel="noopener noreferrer"> billing </a> 
+                section and add your credit card info (don't worry it'll probably cost you less that 0.1$/hr at max)
+              </li>
+              <li> Create your <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer"> api key</a>, paste it below and hit Authenticate
+              </li>
+            </div>
+                <input
+                  type="text"
+                  placeholder="Enter API Key ..."
+                  onChange={handleOpenAIJsonInputChange}
+                />
+            </div>
+            <div className="authentication-container">
+              <button
+                className="styled-button"
+                onClick={handleOpenAIAuthenticate}
+              > Authenticate
+              </button>
+                <div className="emoji-buttons">
+                  {showOpenAIEmoji && openAIAuthenticated ? (
+                    <button className="thumbs-up">
+                      <span>&#10060;</span>
+                    </button>
+                  ) : (
+                    <button className="thumbs-down">
+                    <span>&#128077;&#127997;</span>
+                    </button>
+                  )}
+                </div>
           </div>
-          <div className="left-content">         
-          <div className="bullet-points-container">
-            <li> Go to <a href="https://platform.openai.com/account/billing/overview" target="_blank" rel="noopener noreferrer"> billing </a> 
-              section and add your credit card info (don't worry it'll probably cost you less that 0.1$/hr at max)
-            </li>
-            <li> Create your <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer"> api key</a>, paste it below and hit Authenticate
-            </li>
-          </div>
-              <input
-                type="text"
-                placeholder="Enter API Key ..."
-                onChange={handleJsonInputChange}
-              />
-          </div>
-          <button className={`styled-button ${authenticated ? 'authenticated' : ''}`} onClick={handleAuthenticate}>
-            Authenticate
-            {authenticated && <span className="thumbs-up">👍</span>}
-          </button>
         </div>
-
-
         <div className="right-column">
           <main>
             <section>
