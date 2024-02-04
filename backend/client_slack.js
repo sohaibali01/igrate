@@ -2,17 +2,21 @@
 export class SlackClient {
 
   constructor() {
-    this.accessToken="xoxp-6288430948499-6290981906052-6288597673954-b9bbf68869cbcc99958dd577c9a701b2";
+    this.isAuthenticate = false;
+    //this.accessToken="xoxp-6288430948499-6290981906052-6288597673954-b9bbf68869cbcc99958dd577c9a701b2";
   }
   async authorize(accessToken) {
     this.accessToken = accessToken;
     let textOk, textResponse;
     [textOk, textResponse] = await this.callHTTPAPI('https://slack.com/api/users.list', 'GET', {});
+    this.isAuthenticate = textOk;
     return textOk;
   }
 
   async callSlackAPI(response_message, functionList){
     try{
+      if (!this.isAuthenticate) 
+      return [false, "You must ask user to provide valid api key and then authenticate slack client before running slack related queries"]
 
       let body = JSON.parse(response_message.function.arguments);
       let URL = "";

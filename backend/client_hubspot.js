@@ -2,17 +2,21 @@
 export class HubspotClient {
 
   constructor() {
-    this.accessToken="pat-eu1-9da6d3a7-04fd-4a72-853c-3f5d239b805d";
+    this.isAuthenticate = false;
+    //this.accessToken="pat-eu1-9da6d3a7-04fd-4a72-853c-3f5d239b805d";
   }
   async authorize(accessToken) {
     this.accessToken = accessToken;
     let textOk, textResponse;
     [textOk, textResponse] = await this.callHTTPAPI('https://api.hubapi.com/crm/v3/objects/contacts', 'GET', {});
+    this.isAuthenticate = textOk;
     return textOk;
   }
   
   async callHubspotAPI(response_message, task, functionList){
     try{
+      if (!this.isAuthenticate) 
+      return [false, "You must ask user to provide valid api key and then authenticate hubspot client before running hubspot related queries"]
 
       let body = JSON.parse(response_message.function.arguments);
       let URL = "";

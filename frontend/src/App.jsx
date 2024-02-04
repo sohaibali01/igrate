@@ -1,17 +1,14 @@
 import { useState } from "react";
 import "./App.css";
-import GmailApi from "./GmailApi"; // Import the GmailApi component
+import GmailApi from "./GmailApi"; 
+import OpenAIApi from "./OpenAIApi"; 
+import HubspotApi from "./HubspotApi"; 
+import SlackApi from "./SlackApi";
 
 function App() {
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
-  const [showOpenAIEmoji, setOpenAIEmoji] = useState(false);
-  const [slackAuthenticated, setSlackAuthenticated] = useState(false);
-  const [showSlackEmoji, setSlackEmoji] = useState(false);
-  const [hubspotAuthenticated, setHubspotAuthenticated] = useState(false);
-  const [showHubspotEmoji, setHubspotEmoji] = useState(false);
 
   const chat = async (e, message) => {
     e.preventDefault();
@@ -52,147 +49,17 @@ function App() {
     console.log('Files uploaded:', files);
   };
 
-  const handleOpenAIAuthenticate = () => {
-    if (!openAIAuthenticated) {
-      setOpenAIAuthenticated(true);
-      setOpenAIEmoji(true); // Show thumbs-up on the first authentication
-    }
-    else setOpenAIAuthenticated(false);
-  };
-
-  const handleSlackAuthenticate = () => {
-    if (!slackAuthenticated) {
-      setSlackAuthenticated(true);
-      setSlackEmoji(true); // Show thumbs-up on the first authentication
-    }
-    else setSlackAuthenticated(false);
-  };
-
-  const handleHubspotAuthenticate = () => {
-    if (!hubspotAuthenticated) {
-      setHubspotAuthenticated(true);
-      setHubspotEmoji(true); // Show thumbs-up on the first authentication
-    }
-    else setHubspotAuthenticated(false);
-  };
-
   return (
     <div className="container">
-    <h1>
-      <span className="logo">iGrate</span>
-    </h1>
-
+      <h1>  <span className="logo">iGrate</span>   </h1>
       <div className="horizontal-container">
         <GmailApi />
-        <div className="api-container">
-            <div className="api-heading">
-              <h2>Slack</h2>
-            </div>
-            <div className="api-content">         
-              <div className="bullet-points-container">
-                <li> Create your slack <a href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer"> app </a>
-                </li>
-                <li> Select your app <span>&#x2192;</span> "OAuth & Permissions" <span>&#x2192;</span> "User Token Scopes" <span>&#x2192;</span> select your scopes <span>&#x2192;</span> "Reinstall to workspace" <span>&#x2192;</span> paste token below and hit Authenticate
-                </li>
-              </div>
-              <input
-                  type="text"
-                  placeholder="Enter api key ..."
-                />
-            </div>
-            <div className="authentication-container">
-              <button
-                className="styled-button"
-                onClick={handleSlackAuthenticate}
-              > Authenticate
-              </button>
-                <div className="emoji-buttons">
-                  {showSlackEmoji && slackAuthenticated ? (
-                    <button className="thumbs-up">
-                      <span>&#10060;</span>
-                    </button>
-                  ) : (
-                    <button className="thumbs-down">
-                    <span>&#128077;&#127997;</span>
-                    </button>
-                  )}
-                </div>
-          </div>
-        </div>
-        <div className="api-container">
-            <div className="api-heading">
-              <h2>Hubspot</h2>
-            </div>
-            <div className="api-content">         
-              <div className="bullet-points-container">
-                <li> Create your hubspot <a href="https://developers.hubspot.com/docs/api/private-apps" target="_blank" rel="noopener noreferrer"> app </a>
-                </li>
-                <li> Login to your hubspot account <span>&#x2192;</span> Settings <span>&#x2192;</span> Integration <span>&#x2192;</span> Private apps <span>&#x2192;</span> select app <span>&#x2192;</span> paste access token below and hit Authenticate
-                </li>
-              </div>
-              <input
-                  type="text"
-                  placeholder="Enter api key ..."
-                />
-            </div>
-            <div className="authentication-container">
-              <button
-                className="styled-button"
-                onClick={handleHubspotAuthenticate}
-              > Authenticate
-              </button>
-                <div className="emoji-buttons">
-                  {showHubspotEmoji && hubspotAuthenticated ? (
-                    <button className="thumbs-up">
-                      <span>&#10060;</span>
-                    </button>
-                  ) : (
-                    <button className="thumbs-down">
-                    <span>&#128077;&#127997;</span>
-                    </button>
-                  )}
-                </div>
-          </div>
-        </div>
+        <SlackApi />
+        <HubspotApi />
       </div>
 
       <div className="columns-container">
-        <div className="api-container">
-            <div className="api-heading">
-              <h2>OpenAI</h2>
-            </div>
-            <div className="api-content">         
-            <div className="bullet-points-container">
-              <li> Go to <a href="https://platform.openai.com/account/billing/overview" target="_blank" rel="noopener noreferrer"> billing </a> 
-                section and add your credit card info (don't worry it'll probably cost you less that 0.1$/hr at max)
-              </li>
-              <li> Create your <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer"> api key</a>, paste it below and hit Authenticate
-              </li>
-            </div>
-                <input
-                  type="text"
-                  placeholder="Enter API Key ..."
-                />
-            </div>
-            <div className="authentication-container">
-              <button
-                className="styled-button"
-                onClick={handleOpenAIAuthenticate}
-              > Authenticate
-              </button>
-                <div className="emoji-buttons">
-                  {showOpenAIEmoji && openAIAuthenticated ? (
-                    <button className="thumbs-up">
-                      <span>&#10060;</span>
-                    </button>
-                  ) : (
-                    <button className="thumbs-down">
-                    <span>&#128077;&#127997;</span>
-                    </button>
-                  )}
-                </div>
-          </div>
-        </div>
+        <OpenAIApi />
         <div className="right-column">
           <main>
             <section>
@@ -218,12 +85,13 @@ function App() {
             <form action="" onSubmit={(e) => chat(e, message)}>
               <input
                 type="text"
+                id="inputMessageBox"
                 name="message"
                 value={message}
                 placeholder="Type a message here and hit Enter..."
                 onChange={(e) => setMessage(e.target.value)}
               />
-              <button type="submit" className="send-button">
+              <button type="submit" className="send-button" onClick={(e) => chat(e, document.getElementById("inputMessageBox").value)}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="22" y1="2" x2="11" y2="13" />
                   <polygon points="22 2 15 22 11 13 2 9 22 2" />

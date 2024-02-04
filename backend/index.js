@@ -1,4 +1,3 @@
-import { OpenAI } from 'openai';
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -10,24 +9,64 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const agent = new AutomationAgent();
-await agent.create();
 
-//const openai = new OpenAI({apiKey:'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'});
+app.post("/authenticate/slack", async (request, response) => {
+  const { credentials } = request.body;
+  try {
+    let isauthenticated = await agent.slackClient.authorize(credentials);
+    response.json({
+      success: isauthenticated,
+    });
+  } catch (error) {
+    console.error("Error during Slack authentication:", error);
+    response.status(500).json({
+      success: false
+    });
+  }
+});
+
+app.post("/authenticate/hubspot", async (request, response) => {
+  const { credentials } = request.body;
+  try {
+    let isauthenticated = await agent.hubspotClient.authorize(credentials);
+    response.json({
+      success: isauthenticated,
+    });
+  } catch (error) {
+    console.error("Error during Hubspot authentication:", error);
+    response.status(500).json({
+      success: false
+    });
+  }
+});
 
 app.post("/authenticate/gmail", async (request, response) => {
   const { credentials } = request.body;
-
   try {
     let isauthenticated = await agent.gmailClient.authorize(credentials);
-    // Assuming you handle authentication asynchronously, you can send a response
     response.json({
       success: isauthenticated,
     });
   } catch (error) {
     console.error("Error during Gmail authentication:", error);
     response.status(500).json({
-      success: false,
-      message: "Authentication failed",
+      success: false
+    });
+  }
+});
+
+app.post("/authenticate/openai", async (request, response) => {
+  const { credentials } = request.body;
+  try {
+    let isauthenticated = await agent.openAIClient.authorize(credentials);
+    if (isauthenticated) await agent.create();
+    response.json({
+      success: isauthenticated,
+    });
+  } catch (error) {
+    console.error("Error during OpenAI authentication:", error);
+    response.status(500).json({
+      success: false
     });
   }
 });
@@ -42,7 +81,7 @@ app.post("/chat", async (request, response) => {
   }
   catch(e)
   {
-    msg = {role: "Global Assistant", content: "Error occured, try again :("};
+    msg = {role: "Global Assistant", content: e.toString()};
   }
   response.json({
     output: msg,

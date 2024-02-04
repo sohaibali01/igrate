@@ -1,28 +1,28 @@
-// GmailApi.jsx
+// HubspotApi.jsx
 
 import React, { useState } from "react";
 
-const GmailApi = () => {
-  const [gmailAuthenticated, setGmailAuthenticated] = useState(false);
-  const [showGmailEmoji, setGmailEmoji] = useState(false);
+const HubspotApi = () => {
+  const [hubspotAuthenticated, setHubspotAuthenticated] = useState(false);
+  const [showHubspotEmoji, setHubspotEmoji] = useState(false);
 
-  const handleGmailAuthenticate = async () => {
-    const jsonCredentials = document.getElementById("gmailJsonInput").value;
+  const handleHubspotAuthenticate = async () => {
+    const jsonCredentials = document.getElementById("hubspotJsonInput").value;
 
     try {
-      const response = await fetch("http://localhost:8000/authenticate/gmail", {
+      const response = await fetch("http://localhost:8000/authenticate/hubspot", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ credentials: jsonCredentials }),
       });
-      setGmailEmoji(true); 
+      setHubspotEmoji(true); 
       if (response.ok) {
         const data = await response.json();
-        setGmailAuthenticated(data.success);
+        setHubspotAuthenticated(data.success);
       } else {
-        setGmailAuthenticated(false);
+        setHubspotAuthenticated(false);
       }
     } catch (error) {
       console.error("Error during authentication:", error);
@@ -32,27 +32,25 @@ const GmailApi = () => {
   return (
     <div className="api-container">
       <div className="api-heading">
-        <h2>Gmail</h2>
+        <h2>Hubspot</h2>
       </div>
       <div className="api-content">         
         <div className="bullet-points-container">
-          <li> Create <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a> in google using OAuth 2.0 Client IDs (for web clients)
-          </li>
-          <li> Download the credentials, copy the json content below and hit Authenticate
-          </li>
+          <li> Create your hubspot <a href="https://developers.hubspot.com/docs/api/private-apps" target="_blank" rel="noopener noreferrer"> app </a>  </li>
+          <li> Login to your hubspot account <span>&#x2192;</span> Settings <span>&#x2192;</span> Integration <span>&#x2192;</span> Private apps <span>&#x2192;</span> select app <span>&#x2192;</span> paste access token below and hit Authenticate </li>
         </div>
         <input
             type="text"
             placeholder="Enter json credentials ..."
-            id="gmailJsonInput"
+            id="hubspotJsonInput"
           />
       </div>
       <div className="authentication-container">
-        <button className="styled-button" onClick={handleGmailAuthenticate}> Authenticate
+        <button className="styled-button" onClick={handleHubspotAuthenticate}> Authenticate
         </button>
         <div className="emoji-buttons">
-          { showGmailEmoji ? (
-            gmailAuthenticated ? (
+          { showHubspotEmoji ? (
+            hubspotAuthenticated ? (
               <button className="thumbs-up">
                 <span>&#128077;&#127997;</span>
               </button>
@@ -70,4 +68,4 @@ const GmailApi = () => {
   );
 };
 
-export default GmailApi;
+export default HubspotApi;

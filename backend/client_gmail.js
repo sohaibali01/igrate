@@ -13,6 +13,7 @@ export class GmailClient {
     // If modifying these scopes, delete token.json.
     this.SCOPES = ["https://mail.google.com/"];
     this.accessToken="";
+    this.isAuthenticate=false;
   }
 
   async authenticateUser(oauth2Client) {
@@ -55,18 +56,18 @@ export class GmailClient {
       keys.redirect_uris[0]
     );
 
-    //google.options({auth: oauth2Client});
     let client = await this.authenticateUser(oauth2Client);
     this.accessToken = client.credentials.access_token
     let textOk, textResponse;
     [textOk, textResponse] = await this.callHTTPAPI("https://gmail.googleapis.com/gmail/v1/users/me/profile", "GET", {});
-
+    this.isAuthenticate = textOk;  
     return textOk  
   }
 
   async callGmailAPI(response_message, functionList){
     try{
-     
+      if (!this.isAuthenticate) 
+        return [false, "You must ask user to provide valid json credentials and then authenticate gmail client before running gmail related queries"]
       let body = JSON.parse(response_message.function.arguments);
       let URL = "";
       let method = "";
