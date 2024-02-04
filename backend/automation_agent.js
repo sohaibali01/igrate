@@ -23,11 +23,11 @@ export class AutomationAgent {
       file: "Your goal is to store and analyze data, assist user in general queries and file handling operations including reading data from files or writing data to files"
     };
 
-    await this.hubspotClient.authorize('pat-eu1-9da6d3a7-04fd-4a72-853c-3f5d239b805d');
-    await this.slackClient.authorize('xoxp-6288430948499-6290981906052-6288597673954-b9bbf68869cbcc99958dd577c9a701b2');
+    //await this.hubspotClient.authorize('pat-eu1-9da6d3a7-04fd-4a72-853c-3f5d239b805d');
+    //await this.slackClient.authorize('xoxp-6288430948499-6290981906052-6288597673954-b9bbf68869cbcc99958dd577c9a701b2');
 
-    const CREDENTIALS_GMAIL = '{"web":{"client_id":"344920505144-tnh67ak9pt3vlk80j2tukskbc9kagsba.apps.googleusercontent.com","project_id":"apicomm","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["http://localhost:8080"]}}';
-    await this.gmailClient.authorize(CREDENTIALS_GMAIL);
+    //const CREDENTIALS_GMAIL = '{"web":{"client_id":"344920505144-tnh67ak9pt3vlk80j2tukskbc9kagsba.apps.googleusercontent.com","project_id":"apicomm","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["http://localhost:8080"]}}';
+    //await this.gmailClient.authorize(CREDENTIALS_GMAIL);
 
     this.messages = [];
     this.lastAssistantMessage = "";

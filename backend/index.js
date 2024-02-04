@@ -14,7 +14,25 @@ await agent.create();
 
 //const openai = new OpenAI({apiKey:'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'});
 
-app.post("/", async (request, response) => {
+app.post("/authenticate/gmail", async (request, response) => {
+  const { credentials } = request.body;
+
+  try {
+    let isauthenticated = await agent.gmailClient.authorize(credentials);
+    // Assuming you handle authentication asynchronously, you can send a response
+    response.json({
+      success: isauthenticated,
+    });
+  } catch (error) {
+    console.error("Error during Gmail authentication:", error);
+    response.status(500).json({
+      success: false,
+      message: "Authentication failed",
+    });
+  }
+});
+
+app.post("/chat", async (request, response) => {
   let msg;
   try 
   { 

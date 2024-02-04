@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import GmailApi from "./GmailApi"; // Import the GmailApi component
 
 function App() {
   const [message, setMessage] = useState("");
@@ -7,8 +8,6 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
   const [showOpenAIEmoji, setOpenAIEmoji] = useState(false);
-  const [gmailAuthenticated, setGmailAuthenticated] = useState(false);
-  const [showGmailEmoji, setGmailEmoji] = useState(false);
   const [slackAuthenticated, setSlackAuthenticated] = useState(false);
   const [showSlackEmoji, setSlackEmoji] = useState(false);
   const [hubspotAuthenticated, setHubspotAuthenticated] = useState(false);
@@ -28,7 +27,7 @@ function App() {
     let msgCopy = message;
     setMessage("");
 
-    fetch("http://localhost:8000/", {
+    fetch("http://localhost:8000/chat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,14 +60,6 @@ function App() {
     else setOpenAIAuthenticated(false);
   };
 
-  const handleGmailAuthenticate = () => {
-    if (!gmailAuthenticated) {
-      setGmailAuthenticated(true);
-      setGmailEmoji(true); // Show thumbs-up on the first authentication
-    }
-    else setGmailAuthenticated(false);
-  };
-
   const handleSlackAuthenticate = () => {
     if (!slackAuthenticated) {
       setSlackAuthenticated(true);
@@ -85,26 +76,6 @@ function App() {
     else setHubspotAuthenticated(false);
   };
 
-  const handleOpenAIJsonInputChange = (e) => {
-    // Handle JSON input change logic here
-    // You can use e.target.value to get the input value
-  };
-
-  const handleGmailJsonInputChange = (e) => {
-    // Handle JSON input change logic here
-    // You can use e.target.value to get the input value
-  };
-
-  const handleSlackJsonInputChange = (e) => {
-    // Handle JSON input change logic here
-    // You can use e.target.value to get the input value
-  };
-
-  const handleHubspotJsonInputChange = (e) => {
-    // Handle JSON input change logic here
-    // You can use e.target.value to get the input value
-  };
-
   return (
     <div className="container">
     <h1>
@@ -112,42 +83,7 @@ function App() {
     </h1>
 
       <div className="horizontal-container">
-        <div className="api-container">
-            <div className="api-heading">
-              <h2>Gmail</h2>
-            </div>
-            <div className="api-content">         
-              <div className="bullet-points-container">
-                <li> Create <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a> in google using OAuth 2.0 Client IDs (for desktop clients)
-                </li>
-                <li> Download the credentials, copy the json content below and hit Authenticate
-                </li>
-              </div>
-              <input
-                  type="text"
-                  placeholder="Enter json credentials ..."
-                  onChange={handleGmailJsonInputChange}
-                />
-            </div>
-            <div className="authentication-container">
-              <button
-                className="styled-button"
-                onClick={handleGmailAuthenticate}
-              > Authenticate
-              </button>
-                <div className="emoji-buttons">
-                  {showGmailEmoji && gmailAuthenticated ? (
-                    <button className="thumbs-up">
-                      <span>&#10060;</span>
-                    </button>
-                  ) : (
-                    <button className="thumbs-down">
-                    <span>&#128077;&#127997;</span>
-                    </button>
-                  )}
-                </div>
-          </div>
-        </div>
+        <GmailApi />
         <div className="api-container">
             <div className="api-heading">
               <h2>Slack</h2>
@@ -162,7 +98,6 @@ function App() {
               <input
                   type="text"
                   placeholder="Enter api key ..."
-                  onChange={handleSlackJsonInputChange}
                 />
             </div>
             <div className="authentication-container">
@@ -198,7 +133,6 @@ function App() {
               <input
                   type="text"
                   placeholder="Enter api key ..."
-                  onChange={handleHubspotJsonInputChange}
                 />
             </div>
             <div className="authentication-container">
@@ -238,7 +172,6 @@ function App() {
                 <input
                   type="text"
                   placeholder="Enter API Key ..."
-                  onChange={handleOpenAIJsonInputChange}
                 />
             </div>
             <div className="authentication-container">
