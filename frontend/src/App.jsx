@@ -1,17 +1,34 @@
 import { useState } from "react";
 import "./App.css";
 import GmailApi from "./GmailApi"; 
-import OpenAIApi from "./OpenAIApi"; 
+import OpenAIApi from "./OpenAIApi"
 import HubspotApi from "./HubspotApi"; 
 import SlackApi from "./SlackApi";
+import Duplex from 'stream';
 
 function App() {
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
+  const [fileList, setFileList] = useState([]);
+
+  const animateOpenAIContainer = async () => {
+      // Trigger hovering effect on OpenAIApi container
+      const openAIApiContainer = document.querySelector(".openai-container");
+      openAIApiContainer.classList.add("hover-effect");
+      setTimeout(() => {
+        openAIApiContainer.classList.remove("hover-effect");
+      }, 3000);
+  }
 
   const chat = async (e, message) => {
     e.preventDefault();
+
+    if (!openAIAuthenticated) {
+      animateOpenAIContainer();
+      return;
+    }
 
     if (!message) return;
     setIsTyping(true);
@@ -41,13 +58,26 @@ function App() {
       .catch((error) => {
         console.log(error);
       });
-  };
+  }
 
-  const handleFileUpload = (e) => {
-    // Handle multiple file upload logic here
+  const handleFileUpload = async (e) => {
     const files = e.target.files;
-    console.log('Files uploaded:', files);
-  };
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+    const response = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData,
+    });
+  
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data.success);
+    } else {
+      console.error('Failed to upload files');
+    }
+};
 
   return (
     <div className="container">
@@ -59,7 +89,19 @@ function App() {
       </div>
 
       <div className="columns-container">
-        <OpenAIApi />
+        <OpenAIApi 
+         id="openAIContainer"
+         openAIAuthenticated={openAIAuthenticated}
+         setOpenAIAuthenticated={setOpenAIAuthenticated}
+        />
+        <div className="file-list" id="file-list">
+          {fileList.map((fileName, index) => (
+            <div key={index} className="file-item">
+              <span className="file-icon">📂</span>
+              <span>{fileName}</span>
+            </div>
+          ))}
+        </div>
         <div className="right-column">
           <main>
             <section>
@@ -97,6 +139,7 @@ function App() {
                   <polygon points="22 2 15 22 11 13 2 9 22 2" />
                 </svg>
               </button>
+              {openAIAuthenticated ? (
               <label htmlFor="file-upload" className="file-upload-label">
                 <input
                   type="file"
@@ -106,7 +149,8 @@ function App() {
                   multiple
                 />
                  📂 Upload Files
-              </label>
+              </label>            ) : (
+            <></>)}
             </form>
           </main>
         </div>

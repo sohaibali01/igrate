@@ -130,7 +130,7 @@ input:focus{
   padding: 20px;
 }
 
-.api-container {
+.api-container, .openai-container {
   width: 30%;
   top: 150px;
   background-color: rgba(243, 240, 240, 0.5); /* Off-white background color with 70% transparency */
@@ -140,8 +140,21 @@ input:focus{
   transition: transform 0.3s ease; /* Add transition property for smooth animation */
 }
 
-.api-container:hover {
+.api-container:hover, .openai-container:hover {
   transform: scale(1.05); /* Scale up when hovered */
+}
+
+.openai-container.hover-effect {
+  animation: hoverExpandShrink 1s ease-in-out 3;
+}
+
+@keyframes hoverExpandShrink {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .api-heading {
@@ -253,6 +266,10 @@ input[type="text"] {
 
 .file-upload-label:hover {
   background-color: #0056b3;
+}
+
+.file-list {
+  margin-top: 20px;
 }
 
 .send-button {

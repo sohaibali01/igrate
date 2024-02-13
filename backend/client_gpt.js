@@ -1,4 +1,5 @@
 import { OpenAI } from 'openai';
+import fs from "fs";
 
 export class OpenAIClient {
     constructor() {
@@ -52,32 +53,40 @@ export class GptAssistant {
     }
 
     async create(functionList, name, instructions, openAIClient) {
+        this.openAIClient = openAIClient;
         // let uploadedFile;
-        // if (name === 'retrieval') {
+        // try {
+        // if (name === 'file') {
+        //     console.log("reading file ");
         //     // Upload a file with an "assistants" purpose
         //     uploadedFile = await this.openAIClient.gptClient.files.create({
-        //         file: createReadStream("D:/sohaib/References.docx"),
+        //         file: fs.createReadStream("D:/sohaib/References.docx"),
         //         purpose: 'assistants',
         //     });
         // }
-        this.openAIClient = openAIClient;
-        const assistantID = await this.findExistingAssistant( name );
-        if (!assistantID) {
+        // } catch (error) {
+        //     console.error(error);
+        // }
+       
+        const existingAssistant = await this.findExistingAssistant( name );
+        if (!existingAssistant) {
             this.assistant = await this.openAIClient.gptClient.beta.assistants.create({
                 name: name,
                 model: "gpt-3.5-turbo-1106",
                 instructions: instructions,
                 tools: functionList,
+                file_ids: []
                 // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
-                file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
+                //file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
             });
         } else {
-            this.assistant = await this.openAIClient.gptClient.beta.assistants.update(assistantID, {
+            this.assistant = existingAssistant;
+            await this.openAIClient.gptClient.beta.assistants.update(this.assistant.id, {
                 model: "gpt-3.5-turbo-1106",
                 instructions: instructions,
                 tools: functionList,
-                // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
-                file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
+                file_ids: []
+                // file_ids: name === 'file' ? [uploadedFile.id] : []
             });
         }
 
@@ -149,7 +158,7 @@ export class GptAssistant {
       while (assts.data.length > 0) {
           for (const asst of assts.data) {
               if (asst.name === name) {
-                  return asst.id;
+                  return asst;
               }
           }
 

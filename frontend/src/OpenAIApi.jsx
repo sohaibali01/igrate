@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 
-const OpenAIApi = () => {
-  const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
+const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated }) => {
+ // const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
   const [showOpenAIEmoji, setOpenAIEmoji] = useState(false);
 
   const handleOpenAIAuthenticate = async () => {
@@ -29,7 +29,7 @@ const OpenAIApi = () => {
   };
 
   return (
-    <div className="api-container">
+    <div className="openai-container">
     <div className="api-heading">
       <h2>OpenAI</h2>
     </div>

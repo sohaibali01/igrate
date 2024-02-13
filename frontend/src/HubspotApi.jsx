@@ -41,7 +41,7 @@ const HubspotApi = () => {
         </div>
         <input
             type="text"
-            placeholder="Enter json credentials ..."
+            placeholder="Enter api key ..."
             id="hubspotJsonInput"
           />
       </div>
