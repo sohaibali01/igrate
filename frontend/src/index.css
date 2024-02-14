@@ -125,17 +125,19 @@ input:focus{
 
 .columns-container {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   padding: 20px;
 }
 
 .api-container, .openai-container {
-  width: 30%;
+  width: 100%;
   top: 150px;
   background-color: rgba(243, 240, 240, 0.5); /* Off-white background color with 70% transparency */
   border-radius: 10px;
   padding: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  margin-left: 15px;
+  margin-right: 15px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
   transition: transform 0.3s ease; /* Add transition property for smooth animation */
 }
@@ -171,6 +173,7 @@ input:focus{
   margin: 10px 0;
   text-align: left;
 }
+
 
 .api-content a {
   text-decoration: none;
@@ -233,9 +236,7 @@ input:focus{
 }
 
 
-.right-column {
-  width: 65%;
-}
+
 
 
 section {
@@ -256,6 +257,16 @@ input[type="text"] {
   margin-right: 10px;
 }
 
+.left-column {
+  margin-right: 50px;
+  width: 30%;
+}
+
+.right-column {
+  width: 66%;
+  margin-left: 50px;
+}
+
 .file-upload-label {
   cursor: pointer;
   padding: 10px;
@@ -269,7 +280,14 @@ input[type="text"] {
 }
 
 .file-list {
+  flex-grow: 1;
+  overflow-y: auto; /* Enable vertical scrolling if necessary */
   margin-top: 20px;
+}
+
+.file-item {
+  margin: 10px 0;
+  text-align: left;
 }
 
 .send-button {

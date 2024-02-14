@@ -73,7 +73,11 @@ function App() {
   
     if (response.ok) {
       const data = await response.json();
-      console.log(data.success);
+          // Extract filenames from e.target.files directly
+      const uploadedFiles = Array.from(files).map(file => file.name);
+      
+      // Update fileList state to populate file-list with filenames
+      setFileList(prevFileList => [...prevFileList, ...uploadedFiles])
     } else {
       console.error('Failed to upload files');
     }
@@ -89,18 +93,23 @@ function App() {
       </div>
 
       <div className="columns-container">
-        <OpenAIApi 
-         id="openAIContainer"
-         openAIAuthenticated={openAIAuthenticated}
-         setOpenAIAuthenticated={setOpenAIAuthenticated}
-        />
-        <div className="file-list" id="file-list">
-          {fileList.map((fileName, index) => (
-            <div key={index} className="file-item">
-              <span className="file-icon">📂</span>
-              <span>{fileName}</span>
+        <div className="left-column">
+          <OpenAIApi 
+          id="openAIContainer"
+          openAIAuthenticated={openAIAuthenticated}
+          setOpenAIAuthenticated={setOpenAIAuthenticated}
+          />
+          <div className="openai-container" id="file-list">
+            <div className="api-heading">
+              <h2>Files</h2>
             </div>
-          ))}
+            {fileList.map((fileName, index) => (
+              <div key={index} className="file-item">
+                <span> &#128188; </span>
+                <span>{fileName}</span>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="right-column">
           <main>
