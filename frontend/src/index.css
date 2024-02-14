@@ -78,12 +78,6 @@ p span:first-child{
   display: flex;
 }
 
-
-.hide {
-  visibility: hidden;
-  display: none;
-}
-
 form{
   text-align: center;
   position: sticky;
@@ -308,4 +302,29 @@ input[type="text"] {
 .send-button svg {
   width: 20px;
   height: 20px;
+}
+
+.stop-animation {
+  animation: rotateSquare 2s infinite linear;
+}
+
+@keyframes rotateSquare {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.stop-animation::before {
+  content: '';
+  display: block;
+  width: 50%;
+  height: 50%;
+  background-color: #fff; /* Adjust color as needed */
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  border-radius: 4px; /* Adjust the square's border radius if needed */
 }

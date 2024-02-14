@@ -147,16 +147,61 @@ app.post("/chat", async (request, response) => {
     let jsonPrompt = `{"task":"${request.body.message}"}`;
     await agent.processPrompt(jsonPrompt, null);
     msg = {role: "Global Assistant", content: agent.messages[agent.messages.length - 1][3].reverse()[0]};
+    response.json({
+      output: msg,
+    });
   }
   catch(e)
   {
     msg = {role: "Global Assistant", content: e.toString()};
+    // response.json({
+    //   output: msg,
+    // });
+  }
+  console.log(msg);
+});
+
+app.post("/stop", async (request, response) => {
+  try 
+  { 
+    let runs = {};
+    for (const appname in agent.apps) {
+      console.log(appname, agent.assistants[appname].run);
+      if (typeof agent.assistants[appname].run !== 'undefined') {
+        runs[appname]  = await agent.openAIClient.gptClient.beta.threads.runs.retrieve( agent.assistants[appname].thread.id,  agent.assistants[appname].run.id);
+        console.log(runs[appname].status);
+        if ( runs[appname].status ==="queued" || runs[appname].status ==="in_progress" ||  runs[appname].status ==="requires_action")
+            runs[appname]  = await agent.openAIClient.gptClient.beta.threads.runs.cancel( agent.assistants[appname].thread.id,  agent.assistants[appname].run.id);
+      }
+    }
+  
+    while (true)  {
+      await new Promise(resolve => setTimeout(resolve, 150));
+      let completed = true;
+      for (const appname in agent.apps) {
+        if (typeof agent.assistants[appname].run !== 'undefined') {
+          runs[appname] = await agent.openAIClient.gptClient.beta.threads.runs.retrieve( agent.assistants[appname].thread.id,  agent.assistants[appname].run.id);
+          if ( runs[appname].status ==="queued" || runs[appname].status ==="in_progress" ||  runs[appname].status ==="requires_action" ||  runs[appname].status ==="cancelling" ){
+            completed=false;
+            break;
+          }
+        }
+      }
+      if (completed) break;
   }
   response.json({
-    output: msg,
+    isCompleted: true,
   });
-
+  }
+  catch(e)
+  {
+    console.log(e.toString());
+    response.json({
+      isCompleted: false,
+    });
+  }
 });
+
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);

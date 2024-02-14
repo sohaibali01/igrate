@@ -19,7 +19,7 @@ export class AutomationAgent {
         slack: "Your goal is to assist user in interaction with slack api.",
         hubspot: "Your goal is to perform queries with hubspot CRM.",
         gmail: "Your goal is to assist user in general queries and email communication using gmail api. Figure out dependency between function parameters first and then call the provided functions in a specific order to complete the given task. Do not call functions in parallel or use functions that are not given to you",
-        file: "Your goal is to store and analyze data, assist user in general queries and file handling operations including reading data from files or writing data to files"
+        file: "Your goal is to retrieve data, store data and assist user in general queries and file handling operations including reading data from files or writing data to files"
       };
 
       //await this.hubspotClient.authorize('pat-eu1-9da6d3a7-04fd-4a72-853c-3f5d239b805d');

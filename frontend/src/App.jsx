@@ -30,34 +30,54 @@ function App() {
       return;
     }
 
-    if (!message) return;
-    setIsTyping(true);
-    scrollTo(0, 1e10);
-
-    let msgs = chats;
-    msgs.push({ role: "user", content: message });
-    setChats(msgs);
-
-    let msgCopy = message;
-    setMessage("");
-
-    fetch("http://localhost:8000/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify( {message: msgCopy}),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        msgs.push(data.output);
-        setChats(msgs);
-        setIsTyping(false);
-        scrollTo(0, 1e10);
+    if (isTyping) {
+      fetch("http://localhost:8000/stop", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify( {}),
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          setIsTyping(!data.isCompleted);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
+    else 
+    {
+      if (!message) return;
+
+      setIsTyping(true);
+      scrollTo(0, 1e10);
+
+      let msgs = chats;
+      msgs.push({ role: "user", content: message });
+      setChats(msgs);
+
+      let msgCopy = message;
+      setMessage("");
+
+      fetch("http://localhost:8000/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify( {message: msgCopy}),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          msgs.push(data.output);
+          setChats(msgs);
+          setIsTyping(false);
+          scrollTo(0, 1e10);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
 
   const handleFileUpload = async (e) => {
@@ -99,6 +119,7 @@ function App() {
           openAIAuthenticated={openAIAuthenticated}
           setOpenAIAuthenticated={setOpenAIAuthenticated}
           />
+          {fileList.length > 0 && (
           <div className="openai-container" id="file-list">
             <div className="api-heading">
               <h2>Files</h2>
@@ -110,6 +131,7 @@ function App() {
               </div>
             ))}
           </div>
+            )}
         </div>
         <div className="right-column">
           <main>
@@ -127,12 +149,6 @@ function App() {
                 : ''}
             </section>
 
-            <div className={isTyping ? '' : 'hide'}>
-              <p>
-                <i>{isTyping ? 'Thinking...' : ''}</i>
-              </p>
-            </div>
-
             <form action="" onSubmit={(e) => chat(e, message)}>
               <input
                 type="text"
@@ -142,11 +158,23 @@ function App() {
                 placeholder="Type a message here and hit Enter..."
                 onChange={(e) => setMessage(e.target.value)}
               />
-              <button type="submit" className="send-button" onClick={(e) => chat(e, document.getElementById("inputMessageBox").value)}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13" />
-                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                </svg>
+              <button
+                type="submit"
+                className={`send-button ${isTyping ? 'stop-animation' : ''}`} // Add stop-animation class when isTyping is true
+                onClick={(e) => chat(e, document.getElementById("inputMessageBox").value)}
+              >
+                {isTyping ? ( // Conditional rendering of SVG based on isTyping state
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                  </svg>
+                )}
               </button>
               {openAIAuthenticated ? (
               <label htmlFor="file-upload" className="file-upload-label">

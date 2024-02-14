@@ -5,10 +5,12 @@ import React, { useState } from "react";
 const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated }) => {
  // const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
   const [showOpenAIEmoji, setOpenAIEmoji] = useState(false);
+  const [isAuthenticating, setisAuthenticating] = useState(false);
 
   const handleOpenAIAuthenticate = async () => {
     const jsonCredentials = document.getElementById("openAIJsonInput").value;
     try {
+      setisAuthenticating(true);
       const response = await fetch("http://localhost:8000/authenticate/openAI", {
         method: "POST",
         headers: {
@@ -17,12 +19,14 @@ const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated }) => {
         body: JSON.stringify({ credentials: jsonCredentials }),
       });
       setOpenAIEmoji(true); 
+      
       if (response.ok) {
         const data = await response.json();
         setOpenAIAuthenticated(data.success);
       } else {
         setOpenAIAuthenticated(false);
       }
+      setisAuthenticating(false);
     } catch (error) {
       console.error("Error during authentication:", error);
     }
@@ -55,6 +59,18 @@ const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated }) => {
       </button>
       <div className="emoji-buttons">
           { showOpenAIEmoji ? (
+            ( isAuthenticating ? (
+              <button
+                type="submit"
+                className={`send-button ${isAuthenticating ? 'stop-animation' : ''}`} // Add stop-animation class when isTyping is true
+              >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                  </svg>
+              </button>
+            ) : (
             openAIAuthenticated ? (
               <button className="thumbs-up">
                 <span>&#128077;&#127997;</span>
@@ -63,10 +79,11 @@ const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated }) => {
               <button className="thumbs-down">
                 <span>&#10060;</span>
               </button>
-              ) 
-            ) : (
-            <></>
-          )}
+               )
+              )  
+            )
+            ) : (<></>)
+               }
         </div>
     </div>
   </div>
