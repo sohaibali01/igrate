@@ -6,7 +6,7 @@ const SlackApi = () => {
   const [slackAuthenticated, setSlackAuthenticated] = useState(false);
   const [showSlackEmoji, setSlackEmoji] = useState(false);
 
-  const handleSlackAuthenticate = async () => {
+  const handleSlackAuthenticate = async ({ sessionID }) => {
     const jsonCredentials = document.getElementById("slackJsonInput").value;
 
     try {
@@ -15,7 +15,7 @@ const SlackApi = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ credentials: jsonCredentials }),
+        body: JSON.stringify({ sessionID: sessionID, credentials: jsonCredentials }),
       });
       setSlackEmoji(true); 
       if (response.ok) {

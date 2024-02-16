@@ -13,23 +13,56 @@ const port = 8000;
 app.use(express.json());
 app.use(cors());
 
-// Set timeout to 30 seconds (adjust as needed)
-const TIMEOUT_DURATION = 30000;
+// // Set timeout to 30 seconds (adjust as needed)
+// const TIMEOUT_DURATION = 30000;
 
-// Add timeout middleware
-app.use((req, res, next) => {
-  req.setTimeout(TIMEOUT_DURATION, () => {
-    console.error('Request timed out');
-    res.status(504).send('Request timed out');
-  });
-  res.setTimeout(TIMEOUT_DURATION, () => {
-    console.error('Response timed out');
-    res.status(504).send('Response timed out');
-  });
-  next();
+// // Add timeout middleware
+// app.use((req, res, next) => {
+//   req.setTimeout(TIMEOUT_DURATION, () => {
+//     console.error('Request timed out');
+//     res.status(504).send('Request timed out');
+//   });
+//   res.setTimeout(TIMEOUT_DURATION, () => {
+//     console.error('Response timed out');
+//     res.status(504).send('Response timed out');
+//   });
+//   next();
+// });
+
+let agent = {};
+
+// Function to generate a random session ID
+function generateSessionID() {
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
+
+// Route to handle starting a new session or container for each new user
+app.get("/open", async (req, res) => {
+  try {
+    // Start a new session or container for the user
+    // This could involve spawning a new Docker container or any other initialization steps
+    // Here, let's assume a simple response indicating successful session initiation
+    let sessionID = generateSessionID();
+    console.log("get /: ", sessionID);
+    agent[sessionID] = new AutomationAgent();
+    res.json({ success: true, sessionID: sessionID });
+  } catch (error) {
+    console.error("Error starting session:", error);
+    res.status(500).json({ success: false});
+  }
 });
 
-let agent = new AutomationAgent();
+app.post("/close", async (req, res) => {
+  try {
+    delete agent[req.body.sessionID];
+    console.log("deleted:", req.body.sessionID);
+    res.json({ success: true });
+    
+  } catch (error) {
+    console.error("Error closing session:", error);
+    res.status(500).json({ success: false});
+  }
+});
 
 app.post('/upload', upload.array('files'), async (req, response) => {
   if (!req.files) {
@@ -37,7 +70,7 @@ app.post('/upload', upload.array('files'), async (req, response) => {
       success: false
     });
   }
-
+  console.log(req.body.sessionID);
   try {
     let fileIds = [];
     await Promise.all(req.files.map(async file => {
@@ -50,15 +83,16 @@ app.post('/upload', upload.array('files'), async (req, response) => {
 
       // Read each file from disk as a stream and construct the byte array
       const readStream = fs.createReadStream(filePath);
-      let uploadedFile = await agent.openAIClient.gptClient.files.create({
+      let uploadedFile = await agent[req.body.sessionID].openAIClient.gptClient.files.create({
         file: readStream,
         purpose: 'assistants',
       });
+      fs.unlinkSync(filePath);
       fileIds.push(uploadedFile.id);
     }));
 
     // Do something with the byte array, like saving to a file or processing it further
-    await agent.openAIClient.gptClient.beta.assistants.update(agent.assistants["file"].assistant.id, { file_ids: fileIds });
+    await agent[req.body.sessionID].openAIClient.gptClient.beta.assistants.update(agent[req.body.sessionID].assistants["file"].assistant.id, { file_ids: fileIds });
 
     response.json({
       success: true,
@@ -72,9 +106,9 @@ app.post('/upload', upload.array('files'), async (req, response) => {
 });
 
 app.post("/authenticate/slack", async (request, response) => {
-  const { credentials } = request.body;
+  const  credentials  = request.body.credentials;
   try {
-    let isauthenticated = await agent.slackClient.authorize(credentials);
+    let isauthenticated = await agent[request.body.sessionID].slackClient.authorize(credentials);
     response.json({
       success: isauthenticated,
     });
@@ -87,9 +121,9 @@ app.post("/authenticate/slack", async (request, response) => {
 });
 
 app.post("/authenticate/hubspot", async (request, response) => {
-  const { credentials } = request.body;
+  const  credentials  = request.body.credentials;
   try {
-    let isauthenticated = await agent.hubspotClient.authorize(credentials);
+    let isauthenticated = await agent[request.body.sessionID].hubspotClient.authorize(credentials);
     response.json({
       success: isauthenticated,
     });
@@ -102,9 +136,9 @@ app.post("/authenticate/hubspot", async (request, response) => {
 });
 
 app.post("/authenticate/gmail", async (request, response) => {
-  const { credentials } = request.body;
+  const  credentials  = request.body.credentials;
   try {
-    let isauthenticated = await agent.gmailClient.authorize(credentials);
+    let isauthenticated = await agent[request.body.sessionID].gmailClient.authorize(credentials);
     response.json({
       success: isauthenticated,
     });
@@ -117,10 +151,9 @@ app.post("/authenticate/gmail", async (request, response) => {
 });
 
 app.post("/authenticate/openai", async (request, response) => {
-  const { credentials } = request.body;
   try {
-    let isauthenticated = await agent.openAIClient.authorize(credentials);
-    if (isauthenticated){ await agent.create(); 
+    let isauthenticated = await agent[request.body.sessionID].openAIClient.authorize(request.body.credentials);
+    if (isauthenticated){ await agent[request.body.sessionID].create(); 
     response.json({
       success: isauthenticated,
      // assistant_file_id: agent.assistants["file"].assistant.id,
@@ -145,8 +178,8 @@ app.post("/chat", async (request, response) => {
   try 
   { 
     let jsonPrompt = `{"task":"${request.body.message}"}`;
-    await agent.processPrompt(jsonPrompt, null);
-    msg = {role: "Global Assistant", content: agent.messages[agent.messages.length - 1][3].reverse()[0]};
+    await agent[request.body.sessionID].processPrompt(jsonPrompt, null);
+    msg = {role: "Global Assistant", content: agent[request.body.sessionID].messages[agent[request.body.sessionID].messages.length - 1][3].reverse()[0]};
     response.json({
       output: msg,
     });
@@ -154,9 +187,9 @@ app.post("/chat", async (request, response) => {
   catch(e)
   {
     msg = {role: "Global Assistant", content: e.toString()};
-    // response.json({
-    //   output: msg,
-    // });
+    response.json({
+      output: msg,
+    });
   }
   console.log(msg);
 });
@@ -165,22 +198,22 @@ app.post("/stop", async (request, response) => {
   try 
   { 
     let runs = {};
-    for (const appname in agent.apps) {
-      console.log(appname, agent.assistants[appname].run);
-      if (typeof agent.assistants[appname].run !== 'undefined') {
-        runs[appname]  = await agent.openAIClient.gptClient.beta.threads.runs.retrieve( agent.assistants[appname].thread.id,  agent.assistants[appname].run.id);
+    for (const appname in agent[request.body.sessionID].apps) {
+      console.log(appname, agent[request.body.sessionID].assistants[appname].run);
+      if (typeof agent[request.body.sessionID].assistants[appname].run !== 'undefined') {
+        runs[appname]  = await agent[request.body.sessionID].openAIClient.gptClient.beta.threads.runs.retrieve( agent[request.body.sessionID].assistants[appname].thread.id,  agent[request.body.sessionID].assistants[appname].run.id);
         console.log(runs[appname].status);
         if ( runs[appname].status ==="queued" || runs[appname].status ==="in_progress" ||  runs[appname].status ==="requires_action")
-            runs[appname]  = await agent.openAIClient.gptClient.beta.threads.runs.cancel( agent.assistants[appname].thread.id,  agent.assistants[appname].run.id);
+            runs[appname]  = await agent[request.body.sessionID].openAIClient.gptClient.beta.threads.runs.cancel( agent[request.body.sessionID].assistants[appname].thread.id,  agent[request.body.sessionID].assistants[appname].run.id);
       }
     }
   
     while (true)  {
       await new Promise(resolve => setTimeout(resolve, 150));
       let completed = true;
-      for (const appname in agent.apps) {
-        if (typeof agent.assistants[appname].run !== 'undefined') {
-          runs[appname] = await agent.openAIClient.gptClient.beta.threads.runs.retrieve( agent.assistants[appname].thread.id,  agent.assistants[appname].run.id);
+      for (const appname in agent[request.body.sessionID].apps) {
+        if (typeof agent[request.body.sessionID].assistants[appname].run !== 'undefined') {
+          runs[appname] = await agent[request.body.sessionID].openAIClient.gptClient.beta.threads.runs.retrieve( agent[request.body.sessionID].assistants[appname].thread.id,  agent[request.body.sessionID].assistants[appname].run.id);
           if ( runs[appname].status ==="queued" || runs[appname].status ==="in_progress" ||  runs[appname].status ==="requires_action" ||  runs[appname].status ==="cancelling" ){
             completed=false;
             break;

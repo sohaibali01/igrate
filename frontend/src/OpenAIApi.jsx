@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated }) => {
+const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated,  sessionID  }) => {
  // const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
   const [showOpenAIEmoji, setOpenAIEmoji] = useState(false);
   const [isAuthenticating, setisAuthenticating] = useState(false);
@@ -16,7 +16,7 @@ const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ credentials: jsonCredentials }),
+        body: JSON.stringify({sessionID: sessionID,  credentials: jsonCredentials }),
       });
       setOpenAIEmoji(true); 
       

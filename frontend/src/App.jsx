@@ -1,10 +1,12 @@
-import { useState } from "react";
+
+// App.jsx
+
+import { useState, useEffect } from "react";
 import "./App.css";
 import GmailApi from "./GmailApi"; 
 import OpenAIApi from "./OpenAIApi"
 import HubspotApi from "./HubspotApi"; 
 import SlackApi from "./SlackApi";
-import Duplex from 'stream';
 
 function App() {
   const [message, setMessage] = useState("");
@@ -12,6 +14,56 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const [sessionID, setSessionID] = useState("");
+
+  useEffect( () => {
+    console.log("session: ", sessionID);
+    if (sessionID==="")
+    {
+    // Function to be called when the component mounts (similar to window.onload)
+    const initialize = async () => {
+      try {
+        // Make a GET request to initiate session when component mounts
+        const response = await fetch('http://localhost:8000/open',{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }});
+        const data = await response.json();
+        console.log('Session ID:', data.sessionID);
+        setSessionID(data.sessionID);
+        // Use the session ID received from the backend as needed
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    // Call the initialize function
+    initialize();
+  }
+  const handleBeforeUnload = async (event) => {
+    event.preventDefault(); // Cancel the event to ensure prompt is shown
+
+    try {
+      const response = await fetch('http://localhost:8000/close', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({sessionID: sessionID }),
+      });
+      console.log('Backend notified about page closing');
+    } catch (error) {
+      console.error('Error notifying backend:', error);
+    }
+  };
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  };
+}, [sessionID]);
 
   const animateOpenAIContainer = async () => {
       // Trigger hovering effect on OpenAIApi container
@@ -36,7 +88,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify( {}),
+        body: JSON.stringify( {sessionID: sessionID}),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -65,7 +117,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify( {message: msgCopy}),
+        body: JSON.stringify( {sessionID: sessionID, message: msgCopy}),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -83,6 +135,7 @@ function App() {
   const handleFileUpload = async (e) => {
     const files = e.target.files;
     const formData = new FormData();
+    formData.append('sessionID', sessionID);
     for (let i = 0; i < files.length; i++) {
       formData.append('files', files[i]);
     }
@@ -107,9 +160,9 @@ function App() {
     <div className="container">
       <h1>  <span className="logo">iGrate</span>   </h1>
       <div className="horizontal-container">
-        <GmailApi />
-        <SlackApi />
-        <HubspotApi />
+        <GmailApi sessionID={sessionID} />
+        <SlackApi sessionID={sessionID}  />
+        <HubspotApi sessionID={sessionID}  />
       </div>
 
       <div className="columns-container">
@@ -118,6 +171,7 @@ function App() {
           id="openAIContainer"
           openAIAuthenticated={openAIAuthenticated}
           setOpenAIAuthenticated={setOpenAIAuthenticated}
+          sessionID={sessionID}
           />
           {fileList.length > 0 && (
           <div className="openai-container" id="file-list">

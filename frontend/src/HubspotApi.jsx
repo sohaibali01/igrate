@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-const HubspotApi = () => {
+const HubspotApi = ({ sessionID }) => {
   const [hubspotAuthenticated, setHubspotAuthenticated] = useState(false);
   const [showHubspotEmoji, setHubspotEmoji] = useState(false);
 
@@ -15,7 +15,7 @@ const HubspotApi = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ credentials: jsonCredentials }),
+        body: JSON.stringify({ sessionID: sessionID, credentials: jsonCredentials }),
       });
       setHubspotEmoji(true); 
       if (response.ok) {

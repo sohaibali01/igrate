@@ -6,7 +6,7 @@ const GmailApi = () => {
   const [gmailAuthenticated, setGmailAuthenticated] = useState(false);
   const [showGmailEmoji, setGmailEmoji] = useState(false);
 
-  const handleGmailAuthenticate = async () => {
+  const handleGmailAuthenticate = async ({ sessionID }) => {
     const jsonCredentials = document.getElementById("gmailJsonInput").value;
 
     try {
@@ -15,7 +15,7 @@ const GmailApi = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ credentials: jsonCredentials }),
+        body: JSON.stringify({ sessionID: sessionID, credentials: jsonCredentials }),
       });
       setGmailEmoji(true); 
       if (response.ok) {
