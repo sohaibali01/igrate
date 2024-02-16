@@ -11,6 +11,7 @@ const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated,  sessionID  })
     const jsonCredentials = document.getElementById("openAIJsonInput").value;
     try {
       setisAuthenticating(true);
+      setOpenAIEmoji(true); 
       const response = await fetch("http://localhost:8000/authenticate/openAI", {
         method: "POST",
         headers: {
@@ -18,7 +19,6 @@ const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated,  sessionID  })
         },
         body: JSON.stringify({sessionID: sessionID,  credentials: jsonCredentials }),
       });
-      setOpenAIEmoji(true); 
       
       if (response.ok) {
         const data = await response.json();

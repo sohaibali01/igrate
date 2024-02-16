@@ -209,7 +209,7 @@ function App() {
                 id="inputMessageBox"
                 name="message"
                 value={message}
-                placeholder="Type a message here and hit Enter..."
+                placeholder="Enter message here ..."
                 onChange={(e) => setMessage(e.target.value)}
               />
               <button
