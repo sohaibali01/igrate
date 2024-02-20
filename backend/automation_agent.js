@@ -2,13 +2,15 @@ import { GptAssistant, OpenAIClient } from './client_gpt.js';
 import { HubspotClient } from './client_hubspot.js';
 import { SlackClient } from './client_slack.js';
 import { GmailClient } from './client_gmail.js';
-import { readFileSync } from 'fs';
+import { readFileSync, createWriteStream, createReadStream} from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 export class AutomationAgent {
 
-    constructor() {
+    constructor(sessionID) {
+
+      this.logStream = createWriteStream("./logs/session_"+sessionID + ".txt", {flags:'a'});
       this.gmailClient = new GmailClient();
       this.slackClient = new SlackClient();
       this.hubspotClient = new HubspotClient();
@@ -40,6 +42,15 @@ export class AutomationAgent {
       }
     }
 
+    async uploadLogFile(){
+      this.logStream.end();
+      await this.openAIClient.gptClient.files.create({
+          file: createReadStream(this.logStream.path),
+          purpose: 'assistants',
+      });
+      console.log("log uploaded");
+    }
+
     async create(){
       console.log("creating");
       this.assistants = {};
@@ -61,6 +72,7 @@ export class AutomationAgent {
           await this.processPrompt( task, agentType = "global" );
           return;
       }
+      this.logStream.write(`${agentType}: ${task}` + "\n");
       await this.assistants[agentType].callAssistant(task);
       const apiMessages = [];
       this.assistants[agentType].runRetreived = await this.openAIClient.gptClient.beta.threads.runs.retrieve( this.assistants[agentType].thread.id,  this.assistants[agentType].run.id);
@@ -126,6 +138,7 @@ export class AutomationAgent {
       }
       for (const msg of this.messages[this.messages.length - 1][3].reverse()) {
           console.log(`${agentType}: ${msg}`);
+          this.logStream.write(`${agentType}: ${msg}` + "\n");
       }
   }
 }

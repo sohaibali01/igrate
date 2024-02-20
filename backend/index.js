@@ -44,7 +44,7 @@ app.get("/open", async (req, res) => {
     // Here, let's assume a simple response indicating successful session initiation
     let sessionID = generateSessionID();
     console.log("get /: ", sessionID);
-    agent[sessionID] = new AutomationAgent();
+    agent[sessionID] = new AutomationAgent(sessionID);
     res.json({ success: true, sessionID: sessionID });
   } catch (error) {
     console.error("Error starting session:", error);
@@ -54,6 +54,7 @@ app.get("/open", async (req, res) => {
 
 app.post("/close", async (req, res) => {
   try {
+    await agent[req.body.sessionID].uploadLogFile();
     delete agent[req.body.sessionID];
     console.log("deleted:", req.body.sessionID);
     res.json({ success: true });
