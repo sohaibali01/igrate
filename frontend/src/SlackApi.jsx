@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 
-const SlackApi = () => {
+const SlackApi = ({ sessionID }) => {
   const [slackAuthenticated, setSlackAuthenticated] = useState(false);
   const [showSlackEmoji, setSlackEmoji] = useState(false);
 
-  const handleSlackAuthenticate = async ({ sessionID }) => {
+  const handleSlackAuthenticate = async () => {
     const jsonCredentials = document.getElementById("slackJsonInput").value;
 
     try {

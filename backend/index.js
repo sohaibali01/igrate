@@ -136,9 +136,10 @@ app.post("/authenticate/hubspot", async (request, response) => {
 });
 
 app.post("/authenticate/gmail", async (request, response) => {
-  const  credentials  = request.body.credentials;
+  const  accessToken  = request.body.accessToken;
+  console.log(accessToken);
   try {
-    let isauthenticated = await agent[request.body.sessionID].gmailClient.authorize(credentials);
+    let isauthenticated = await agent[request.body.sessionID].gmailClient.authorize(accessToken);
     response.json({
       success: isauthenticated,
     });
