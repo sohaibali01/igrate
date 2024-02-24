@@ -3,7 +3,7 @@
     "type": "function",
     "function": {
     "name": "file",
-    "description": "This function reads data from files and also write data to files. It also extracts or retrieves data from files.",
+    "description": "This function reads data from files and also write data to files. It also extracts or retrieves data from files",
     "parameters": { "type": "object",  
     "properties": {
                   "task": {"type": "string", "description": "the detailed task description fully explaining the file handling action"},

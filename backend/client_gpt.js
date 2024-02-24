@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai';
-import fs from "fs";
+// import fs from "fs";
 
 export class OpenAIClient {
     constructor() {
@@ -68,27 +68,27 @@ export class GptAssistant {
         //     console.error(error);
         // }
        
-        const existingAssistant = await this.findExistingAssistant( name );
-        if (!existingAssistant) {
-            this.assistant = await this.openAIClient.gptClient.beta.assistants.create({
-                name: name,
-                model: "gpt-3.5-turbo-1106",
-                instructions: instructions,
-                tools: functionList,
-                file_ids: []
-                // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
-                //file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
-            });
-        } else {
-            this.assistant = existingAssistant;
-            await this.openAIClient.gptClient.beta.assistants.update(this.assistant.id, {
-                model: "gpt-3.5-turbo-1106",
-                instructions: instructions,
-                tools: functionList,
-                file_ids: []
-                // file_ids: name === 'file' ? [uploadedFile.id] : []
-            });
-        }
+        // const existingAssistant = await this.findExistingAssistant( name );
+        // if (!existingAssistant) {
+        //     this.assistant = await this.openAIClient.gptClient.beta.assistants.create({
+        //         name: name,
+        //         model: "gpt-3.5-turbo-1106",
+        //         instructions: instructions,
+        //         tools: functionList,
+        //         file_ids: []
+        //         // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
+        //         //file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
+        //     });
+        // } else {
+        this.assistant = existingAssistant;
+        await this.openAIClient.gptClient.beta.assistants.update(this.assistant.id, {
+            model: "gpt-3.5-turbo-1106",
+            instructions: instructions,
+            tools: functionList,
+            file_ids: []
+            // file_ids: name === 'file' ? [uploadedFile.id] : []
+        });
+       // }
 
         this.agentType = name;
         this.lastMessageTimeStamp = 0;
@@ -152,20 +152,20 @@ export class GptAssistant {
    }
   
 
-    async findExistingAssistant(name) {
-      let assts = await this.openAIClient.gptClient.beta.assistants.list({ limit: 100 });
+//     async findExistingAssistant(name) {
+//       let assts = await this.openAIClient.gptClient.beta.assistants.list({ limit: 100 });
 
-      while (assts.data.length > 0) {
-          for (const asst of assts.data) {
-              if (asst.name === name) {
-                  return asst;
-              }
-          }
+//       while (assts.data.length > 0) {
+//           for (const asst of assts.data) {
+//               if (asst.name === name) {
+//                   return asst;
+//               }
+//           }
 
-          assts = await this.openAIClient.gptClient.beta.assistants.list({
-              after: assts.data[assts.data.length - 1].id,
-              limit: 100
-          });
-      }
-   }
+//           assts = await this.openAIClient.gptClient.beta.assistants.list({
+//               after: assts.data[assts.data.length - 1].id,
+//               limit: 100
+//           });
+//       }
+//    }
 }
