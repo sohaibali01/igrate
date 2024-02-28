@@ -1,5 +1,5 @@
 import express from "express";
-// import bodyParser from "body-parser";
+import bodyParser from "body-parser";
 import cors from "cors";
 import fs from "fs";
 import multer from "multer";
@@ -10,24 +10,19 @@ const upload = multer({ storage: storage });
 
 const app = express();
 const port = 8000;
-app.use(express.json());
+
+
 app.use(cors());
 
-// // Set timeout to 30 seconds (adjust as needed)
-// const TIMEOUT_DURATION = 30000;
+app.use(bodyParser.json({
+limit: '50mb',
+extended: true
+})); // support encoded bodies
 
-// // Add timeout middleware
-// app.use((req, res, next) => {
-//   req.setTimeout(TIMEOUT_DURATION, () => {
-//     console.error('Request timed out');
-//     res.status(504).send('Request timed out');
-//   });
-//   res.setTimeout(TIMEOUT_DURATION, () => {
-//     console.error('Response timed out');
-//     res.status(504).send('Response timed out');
-//   });
-//   next();
-// });
+app.use(bodyParser.urlencoded({
+limit: '50mb',
+extended: true
+})); // support encoded bodies
 
 let agent = {};
 
@@ -37,7 +32,7 @@ function generateSessionID() {
 }
 
 // Route to handle starting a new session or container for each new user
-app.get("/open", async (req, res) => {
+app.post("/open", async (req, res) => {
   try {
     // Start a new session or container for the user
     // This could involve spawning a new Docker container or any other initialization steps
@@ -71,7 +66,6 @@ app.post('/upload', upload.array('files'), async (req, response) => {
       success: false
     });
   }
-  console.log(req.body.sessionID);
   try {
     let fileIds = [];
     await Promise.all(req.files.map(async file => {
@@ -138,7 +132,6 @@ app.post("/authenticate/hubspot", async (request, response) => {
 
 app.post("/authenticate/gmail", async (request, response) => {
   const  accessToken  = request.body.accessToken;
-  console.log(accessToken);
   try {
     let isauthenticated = await agent[request.body.sessionID].gmailClient.authorize(accessToken);
     response.json({

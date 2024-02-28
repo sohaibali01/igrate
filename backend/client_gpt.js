@@ -70,17 +70,17 @@ export class GptAssistant {
        
         // const existingAssistant = await this.findExistingAssistant( name );
         // if (!existingAssistant) {
-        //     this.assistant = await this.openAIClient.gptClient.beta.assistants.create({
-        //         name: name,
-        //         model: "gpt-3.5-turbo-1106",
-        //         instructions: instructions,
-        //         tools: functionList,
-        //         file_ids: []
-        //         // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
-        //         //file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
-        //     });
+        this.assistant = await this.openAIClient.gptClient.beta.assistants.create({
+            name: name,
+            model: "gpt-3.5-turbo-1106",
+            instructions: instructions,
+            tools: functionList,
+            file_ids: []
+            // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
+            //file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
+        });
         // } else {
-        this.assistant = existingAssistant;
+        // this.assistant = existingAssistant;
         await this.openAIClient.gptClient.beta.assistants.update(this.assistant.id, {
             model: "gpt-3.5-turbo-1106",
             instructions: instructions,

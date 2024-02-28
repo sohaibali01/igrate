@@ -12,7 +12,8 @@ const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated,  sessionID  })
     try {
       setisAuthenticating(true);
       setOpenAIEmoji(true); 
-      const response = await fetch("http://localhost:8000/authenticate/openAI", {
+      
+      const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/authenticate/openAI", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

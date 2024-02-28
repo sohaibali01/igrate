@@ -41,7 +41,8 @@ const GmailApi = ({ sessionID }) => {
             authWindow.close(); // Close the authentication window once done
             // Proceed with further actions, such as sending the access token to the server
             try {
-              const response = await fetch("http://localhost:8000/authenticate/gmail", {
+              
+              const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/authenticate/gmail", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -77,7 +78,7 @@ const GmailApi = ({ sessionID }) => {
       </div>
       <div className="api-content">         
         <div className="bullet-points-container">
-          <li> Create google <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a>  <span>&#x2192;</span> "OAuth client ID"  <span>&#x2192;</span>  "Web application" <span>&#x2192;</span> "Authorized redirect URIs: http://localhost:8080"  <span>&#x2192;</span> "Create" 
+          <li> Create google <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a>  <span>&#x2192;</span> "OAuth client ID"  <span>&#x2192;</span>  "Web application" <span>&#x2192;</span> "Authorized redirect URIs: https://igrate.ai"  <span>&#x2192;</span> "Create" 
           </li>
           <li> Download json credentials, copy json content below and hit Authenticate
           </li>

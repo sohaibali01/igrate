@@ -24,11 +24,10 @@ function App() {
     const initialize = async () => {
       try {
         // Make a GET request to initiate session when component mounts
-        const response = await fetch('http://localhost:8000/open',{
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          }});
+        const response = await fetch('https://excited-lionfish-talented.ngrok-free.app/open', {
+          method: 'POST',
+          body:  new FormData(),
+        });
         const data = await response.json();
         console.log('Session ID:', data.sessionID);
         setSessionID(data.sessionID);
@@ -45,11 +44,13 @@ function App() {
     event.preventDefault(); // Cancel the event to ensure prompt is shown
 
     try {
-      const response = await fetch('http://localhost:8000/close', {
-        method: 'POST',
+      // const formData = new FormData();
+      // formData.append('sessionID', sessionID);
+      const response = await fetch('https://excited-lionfish-talented.ngrok-free.app/close', {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
+        method: 'POST',
         body: JSON.stringify({sessionID: sessionID }),
       });
       console.log('Backend notified about page closing');
@@ -83,7 +84,7 @@ function App() {
     }
 
     if (isTyping) {
-      fetch("http://localhost:8000/stop", {
+      fetch("https://excited-lionfish-talented.ngrok-free.app/stop", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +113,7 @@ function App() {
       let msgCopy = message;
       setMessage("");
 
-      fetch("http://localhost:8000/chat", {
+      fetch("https://excited-lionfish-talented.ngrok-free.app/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +140,7 @@ function App() {
     for (let i = 0; i < files.length; i++) {
       formData.append('files', files[i]);
     }
-    const response = await fetch("http://localhost:8000/upload", {
+    const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/upload", {
       method: "POST",
       body: formData,
     });

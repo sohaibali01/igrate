@@ -10,7 +10,8 @@ const HubspotApi = ({ sessionID }) => {
     const jsonCredentials = document.getElementById("hubspotJsonInput").value;
 
     try {
-      const response = await fetch("http://localhost:8000/authenticate/hubspot", {
+      
+      const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/authenticate/hubspot", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

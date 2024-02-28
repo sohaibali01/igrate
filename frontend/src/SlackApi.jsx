@@ -10,7 +10,7 @@ const SlackApi = ({ sessionID }) => {
     const jsonCredentials = document.getElementById("slackJsonInput").value;
 
     try {
-      const response = await fetch("http://localhost:8000/authenticate/slack", {
+      const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/authenticate/slack", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

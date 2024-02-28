@@ -43,6 +43,9 @@ export class AutomationAgent {
     }
 
     async uploadLogFile(){
+      if (typeof this.openAIClient.gptClient === 'undefined')
+        return;
+
       this.logStream.end();
       await this.openAIClient.gptClient.files.create({
           file: createReadStream(this.logStream.path),
