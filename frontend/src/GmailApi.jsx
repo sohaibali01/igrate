@@ -78,7 +78,7 @@ const GmailApi = ({ sessionID }) => {
       </div>
       <div className="api-content">         
         <div className="bullet-points-container">
-          <li> Create google <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a>  <span>&#x2192;</span> "OAuth client ID"  <span>&#x2192;</span>  "Web application" <span>&#x2192;</span> "Authorized redirect URIs: https://igrate.ai"  <span>&#x2192;</span> "Create" 
+          <li> Create google <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a>  <span>&#x2192;</span> "OAuth client ID"  <span>&#x2192;</span>  "Web application" <span>&#x2192;</span> "Authorized redirect URIs: https://www.demo.igrate.ai"  <span>&#x2192;</span> "Create" 
           </li>
           <li> Download json credentials, copy json content below and hit Authenticate
           </li>
