@@ -1,7 +1,6 @@
 [
   {
     "type": "function",
-    "function": {
     "name": "slack_chat_postMessage",
     "description": "Send a message to a channel",
     "parameters": { "type": "object",
@@ -11,11 +10,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name","enum":["https://slack.com/api/chat.postMessage"]} 
                   },
       "required": ["method", "URL", "channel", "text"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_chat_delete_update",
     "description": "Delete or update a particular message from a particular channel",
     "parameters": { "type": "object",
@@ -25,11 +22,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name","enum":["https://slack.com/api/chat.delete", "https://slack.com/api/chat.update"]} 
                   },
       "required": ["method", "URL", "channel", "ts"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_conversations_archive",
     "description": "Archive or delete a channel or a conversation",
     "parameters": { "type": "object",
@@ -38,11 +33,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/conversations.archive"]} 
                   },
       "required": ["method", "URL", "channel"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_conversations_create",
     "description": "Create a new channel or a conversation",
     "parameters": { "type": "object",
@@ -51,11 +44,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/conversations.create"]} 
                   },
       "required": ["method", "URL", "name"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_conversations_history",
     "description": "Get a list of messages and events from a channel",
     "parameters": { "type": "object",
@@ -69,11 +60,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/conversations.history"]} 
                   },
       "required": ["method", "URL", "channel"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_conversations_list",
     "description": "List all channels in a Slack team",
     "parameters": { "type": "object",
@@ -84,11 +73,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/conversations.list"]} 
                   },
       "required": ["method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_conversations_members",
     "description": "Retrieve members of a conversation or channel",
     "parameters": { "type": "object",
@@ -100,11 +87,9 @@
                   "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/conversations.members"]} 
                   },
       "required": ["method", "URL", "channel"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_conversations_rename",
     "description": "Rename a conversation or channel",
     "parameters": { "type": "object",
@@ -114,11 +99,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/conversations.rename"]} 
                   },
       "required": ["method", "URL", "channel", "name"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_conversations_replies",
     "description": "Retrieve a thread of messages or replies posted to a conversation or channel",
     "parameters": { "type": "object",
@@ -133,11 +116,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/conversations.replies"]} 
                   },
       "required": ["method", "URL", "ts", "channel"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_users_conversations",
     "description": "List conversations the calling user may access",
     "parameters": { "type": "object",
@@ -148,11 +129,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/users.conversations"]} 
                   },
       "required": ["method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_users_identity",
     "description": "Get a user's identity",
     "parameters": { "type": "object",
@@ -160,11 +139,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/users.identity"]} 
                   },
       "required": ["method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_users_info",
     "description": "Get information about a user",
     "parameters": { "type": "object",
@@ -173,11 +150,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/users.info"]} 
                   },
       "required": ["method", "URL", "user"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_users_list",
     "description": "Lists all users in a Slack team",
     "parameters": { "type": "object",
@@ -188,11 +163,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/users.list"]} 
                   },
       "required": ["method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_users_lookupByEmail",
     "description": "Find a user with an email address",
     "parameters": { "type": "object",
@@ -201,11 +174,9 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/users.lookupByEmail"]} 
                   },
       "required": ["method", "URL", "email"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "slack_users_profile_get",
     "description": "Retrieve a user's profile information, including their custom status",
     "parameters": { "type": "object",
@@ -213,6 +184,5 @@
                     "URL": {"type": "string", "description": "Full slack URL of the HTTP API method, format: https://slack.com/api/method-name", "enum":["https://slack.com/api/users.profile.get"]} 
                   },
       "required": ["method", "URL"]}
-                }
   }                  
   ]

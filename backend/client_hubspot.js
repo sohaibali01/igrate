@@ -3,7 +3,6 @@ export class HubspotClient {
 
   constructor() {
     this.isAuthenticate = false;
-    //this.accessToken="pat-eu1-9da6d3a7-04fd-4a72-853c-3f5d239b805d";
   }
   async authorize(accessToken) {
     this.accessToken = accessToken;
@@ -18,27 +17,32 @@ export class HubspotClient {
       if (!this.isAuthenticate) 
       return [false, "You must ask user to provide valid api key and then authenticate hubspot client before running hubspot related queries"]
 
-      let body = JSON.parse(response_message.function.arguments);
+      let body = JSON.parse(response_message.arguments);
       let URL = "";
       let method = "";
       for (let func of functionList) {
-        if (func.function.name === response_message.function.name) {
+        if (func.name === response_message.name) {
             let missing=""
-            for (const key in func.function.parameters.required)
-                if (!(func.function.parameters.required[key] in body))
-                    missing = missing + func.function.parameters.required[key] + "; "
+            for (const key in func.parameters.required)
+                if (!(func.parameters.required[key] in body))
+                    missing = missing + func.parameters.required[key] + "; "
             if (missing !=="")
                 return [false, "You must provide the required arguments of the function. The following ones are missing: "+ missing];
-            if ( func.function.parameters.properties.URL.hasOwnProperty("enum") && func.function.parameters.properties.URL.enum.length==1)
-              URL = func.function.parameters.properties.URL.enum[0];
+            if ( func.parameters.properties.URL.hasOwnProperty("enum") && func.parameters.properties.URL.enum.length==1)
+              URL = func.parameters.properties.URL.enum[0];
             else
               URL = body["URL"];
-            if (func.function.parameters.properties.method.hasOwnProperty("enum") && func.function.parameters.properties.method.enum.length==1)
-              method = func.function.parameters.properties.method.enum[0];
+            if (func.parameters.properties.method.hasOwnProperty("enum") && func.parameters.properties.method.enum.length==1)
+              method = func.parameters.properties.method.enum[0];
             else
               method = body["method"];          
             break; 
         }
+      }
+
+      if (body.hasOwnProperty("hs_object_type")){
+        URL = URL + "/" + body["hs_object_type"];
+        delete body["hs_object_type"]
       }
 
       delete body["method"]
@@ -50,7 +54,7 @@ export class HubspotClient {
           URL = URL + "/" + body["id"];
         }
         else {
-          URL = URL + "?" + new URLSearchParams(body)
+          URL = URL + "?" + new URLSearchParams(Object.entries(body).filter(([_, v]) => v !== "" && v != null))
         }
         body={};
       }

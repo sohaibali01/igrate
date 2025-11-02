@@ -1,15 +1,13 @@
 import { OpenAI } from 'openai';
-// import fs from "fs";
 
 export class OpenAIClient {
     constructor() {
-     // this.accessToken="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";
     }
     async authorize(accessToken) {
       try {
         this.accessToken = accessToken;
         this.gptClient = new OpenAI({apiKey:accessToken});
-        await this.gptClient.beta.assistants.list();
+        //this.gptClient.containers.files.content.retrieve().responses.create()
         return true;
       }
       catch (e) {
@@ -18,33 +16,19 @@ export class OpenAIClient {
       }
     }  
 
-    async getAssistantMessage(message) {
-    // Extract the message content
-    const messageContent = message.content[0].text;
-    const annotations = messageContent.annotations;
-    const citations = [];
-
-    // Iterate over the annotations and add footnotes
-    for (let index = 0; index < annotations.length; index++) {
-        const annotation = annotations[index];
-
-        // Replace the text with a footnote
-        messageContent.value = await messageContent.value.replace(annotation.text, `[${index}]`);
-
-        // Gather citations based on annotation attributes
-        if (annotation.file_citation) {
-            const citedFile = await this.gptClient.files.retrieve(annotation.file_citation.file_id);
-            citations.push(`[${index}] ${annotation.file_citation.quote} from ${citedFile.filename}`);
-        } else if (annotation.file_path) {
-            const link = `https://platform.openai.com/files/${annotation.file_path.file_id}`;
-            citations.push(`[${index}] To download, visit ${link}`);
-            // Note: File download functionality not implemented above for brevity
+    async getAssistantMessage(message, response_id) {
+        // Extract the message content
+        let messageContent = message.content[0].text;
+        const annotations =  message.content[0].annotations;
+        // Iterate over the annotations and add footnotes
+        for (let index = 0; index < annotations.length; index++) {
+            const annotation = annotations[index];
+            if (annotation.type === "container_file_citation") {
+                const fileUrl = `Download it from: https://platform.openai.com/logs/${response_id}`;
+                messageContent =  messageContent + '\n' + fileUrl + '\n';
+            }
         }
-    }
-
-    // Add footnotes to the end of the message before displaying to the user
-    messageContent.value += '\n' + citations.join('\n');
-    return messageContent.value;
+        return messageContent;
     }
 }
 
@@ -54,46 +38,26 @@ export class GptAssistant {
 
     async create(functionList, name, instructions, openAIClient) {
         this.openAIClient = openAIClient;
-        // let uploadedFile;
-        // try {
-        // if (name === 'file') {
-        //     console.log("reading file ");
-        //     // Upload a file with an "assistants" purpose
-        //     uploadedFile = await this.openAIClient.gptClient.files.create({
-        //         file: fs.createReadStream("D:/sohaib/References.docx"),
-        //         purpose: 'assistants',
-        //     });
-        // }
-        // } catch (error) {
-        //     console.error(error);
-        // }
-       
-        // const existingAssistant = await this.findExistingAssistant( name );
-        // if (!existingAssistant) {
-        this.assistant = await this.openAIClient.gptClient.beta.assistants.create({
-            name: name,
-            model: "gpt-3.5-turbo-1106",
-            instructions: instructions,
-            tools: functionList,
-            file_ids: []
-            // file_ids: name === 'retrieval' ? [uploadedFile.id] : [],
-            //file_ids: name === 'file' ? ["file-mIRUcl5ACMX1jExfwXjbD4n4"] : []
-        });
-        // } else {
-        // this.assistant = existingAssistant;
-        await this.openAIClient.gptClient.beta.assistants.update(this.assistant.id, {
-            model: "gpt-3.5-turbo-1106",
-            instructions: instructions,
-            tools: functionList,
-            file_ids: []
-            // file_ids: name === 'file' ? [uploadedFile.id] : []
-        });
-       // }
+
+        this.model = "gpt-4.1";
+        this.instructions= instructions;
+        this.tools = functionList;
+        this.newTools=[];
 
         this.agentType = name;
         this.lastMessageTimeStamp = 0;
-        this.thread = await this.openAIClient.gptClient.beta.threads.create();
+        this.thread = await this.openAIClient.gptClient.conversations.create();
         this.threadIds = {};
+        this.fileIds=[];
+        this.imageIds=[];
+    }
+
+    async addImageIds(imageIds) {
+        this.imageIds.push(...imageIds);
+    }
+
+    async addFileIds(fileIds) {
+        this.fileIds.push(...fileIds);
     }
 
     setThreadIds(threadIds) {
@@ -105,10 +69,10 @@ export class GptAssistant {
       let history = {};
       for (const agentType in this.threadIds) {
           if (agentType !== this.agentType) {
-              const threadMessages = await this.openAIClient.gptClient.beta.threads.messages.list(this.threadIds[agentType]);
+              const threadMessages = await this.openAIClient.gptClient.conversations.items.list(this.threadIds[agentType]);
 
               for (const msg of threadMessages.data) {
-                  if (msg.role === 'assistant' && msg.created_at > this.lastMessageTimeStamp) {
+                  if ( msg.type === 'message' && msg.role === 'assistant' && msg.created_at > this.lastMessageTimeStamp) {
                       history[msg.created_at] = `${agentType} assistant: ${await this.openAIClient.getAssistantMessage(msg)}`;
                   }
               }
@@ -122,50 +86,41 @@ export class GptAssistant {
     }
 
     async callAssistant(jsonPrompt) {
-      const functionArgs = JSON.parse(jsonPrompt);
-      const prompt = functionArgs.task;
-      delete functionArgs.task;
-  
-      let combinedPrompt = prompt;
-      console.log(`calling ${this.agentType}: ${prompt}: ${functionArgs.extra_info || ""}`);
-  
-      if (this.agentType !== "global") {
-          const history = await this.compileHistory();
-          combinedPrompt = `Consider processing the following task \nTask: ${prompt}: ${functionArgs.extra_info}`;
-            
-          if (history !== "") {
-              combinedPrompt += `\n if there is some missing information, the following event history may help you. \n Context History:\n${history}`;
-          }
-      }
-  
-      const message = await this.openAIClient.gptClient.beta.threads.messages.create(this.thread.id, {role: "user", content: combinedPrompt });
-  
-      this.lastMessageTimeStamp = message.created_at;
-      this.run = await this.openAIClient.gptClient.beta.threads.runs.create( this.thread.id, { assistant_id: this.assistant.id });
-  
-      let runRetrieved = await this.openAIClient.gptClient.beta.threads.runs.retrieve( this.thread.id,  this.run.id );
-  
-      while (runRetrieved.status === "in_progress" || runRetrieved.status === "queued") {
-          await new Promise(resolve => setTimeout(resolve, 300));
-          runRetrieved = await this.openAIClient.gptClient.beta.threads.runs.retrieve( this.thread.id,  this.run.id );
-      }
+        const functionArgs = JSON.parse(jsonPrompt);
+        const prompt = functionArgs.task;
+        delete functionArgs.task;
+    
+        let combinedPrompt = prompt;
+    
+        if (this.agentType !== "global") {
+            const history = await this.compileHistory();
+            combinedPrompt = `Consider processing the following task \nTask: ${prompt}: ${functionArgs.extra_info || ""}`;
+                
+            if (history !== "") {
+                combinedPrompt += `\n if there is some missing information, the following event history may help you. \n Context History:\n${history}`;
+            }
+        }
+
+        this.newTools = structuredClone(this.tools);
+        if (this.fileIds.length > 0) {
+            const vectorStore = await this.openAIClient.gptClient.vectorStores.create({file_ids: this.fileIds });
+            this.newTools.push( { type: "file_search", "vector_store_ids": [vectorStore.id]});
+            this.newTools.push( { type: "code_interpreter", container: { type: "auto", file_ids: this.fileIds}});
+        }
+
+        if (this.imageIds.length > 0) {
+            const content = [
+                ...this.imageIds.map(id => ({ type: "input_image", file_id: id})),
+                { type: "input_text", text: `${combinedPrompt}` }
+            ];
+            combinedPrompt = [
+                { role: "user", content: content }
+            ]; 
+        }
+
+        this.response = await this.openAIClient.gptClient.responses.create({ model: this.model, instructions: this.instructions, tools: this.newTools, conversation: this.thread.id, input: combinedPrompt, parallel_tool_calls: false });
+
+        this.lastMessageTimeStamp = this.response.created_at;
+        this.imageIds.length = 0;
    }
-  
 
-//     async findExistingAssistant(name) {
-//       let assts = await this.openAIClient.gptClient.beta.assistants.list({ limit: 100 });
-
-//       while (assts.data.length > 0) {
-//           for (const asst of assts.data) {
-//               if (asst.name === name) {
-//                   return asst;
-//               }
-//           }
-
-//           assts = await this.openAIClient.gptClient.beta.assistants.list({
-//               after: assts.data[assts.data.length - 1].id,
-//               limit: 100
-//           });
-//       }
-//    }
-}

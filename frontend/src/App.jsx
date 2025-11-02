@@ -7,6 +7,9 @@ import GmailApi from "./GmailApi";
 import OpenAIApi from "./OpenAIApi"
 import HubspotApi from "./HubspotApi"; 
 import SlackApi from "./SlackApi";
+import { Helmet } from 'react-helmet'
+
+const API_URL = "http://localhost:8000";
 
 function App() {
   const [message, setMessage] = useState("");
@@ -24,7 +27,7 @@ function App() {
     const initialize = async () => {
       try {
         // Make a GET request to initiate session when component mounts
-        const response = await fetch('https://excited-lionfish-talented.ngrok-free.app/open', {
+        const response = await fetch(`${API_URL}/open`, {
           method: 'POST',
           body:  new FormData(),
         });
@@ -46,7 +49,7 @@ function App() {
     try {
       // const formData = new FormData();
       // formData.append('sessionID', sessionID);
-      const response = await fetch('https://excited-lionfish-talented.ngrok-free.app/close', {
+      const response = await fetch(`${API_URL}/close`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -84,7 +87,7 @@ function App() {
     }
 
     if (isTyping) {
-      fetch("https://excited-lionfish-talented.ngrok-free.app/stop", {
+      fetch(`${API_URL}/stop`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +116,7 @@ function App() {
       let msgCopy = message;
       setMessage("");
 
-      fetch("https://excited-lionfish-talented.ngrok-free.app/chat", {
+      fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,7 +143,7 @@ function App() {
     for (let i = 0; i < files.length; i++) {
       formData.append('files', files[i]);
     }
-    const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/upload", {
+    const response = await fetch(`${API_URL}/upload`, {
       method: "POST",
       body: formData,
     });
@@ -159,6 +162,10 @@ function App() {
 
   return (
     <div className="container">
+      <Helmet>
+        <title>iGrate</title>
+        <meta property="og:title" content="iGrate" />
+      </Helmet>
       <h1>  <span className="logo">iGrate</span>   </h1>
       <div className="horizontal-container">
         <GmailApi sessionID={sessionID} />
@@ -193,17 +200,19 @@ function App() {
             <section>
               {chats && chats.length
                 ? chats.map((chat, index) => (
-                    <p key={index} className={chat.role === 'user' ? 'user_msg' : 'assistant_msg'}>
-                      <span>
-                        <b>{chat.role.toUpperCase()}</b>
+                    <p
+                      key={index}
+                      className={chat.role === "user" ? "user_msg" : "assistant_msg"}
+                    >
+                      <span className="msg_role">
+                        <b>{chat.role}</b>
                       </span>
                       <span>:</span>
-                      <span>{chat.content}</span>
+                      <span className="msg_text">{chat.content}</span>
                     </p>
                   ))
-                : ''}
+                : ""}
             </section>
-
             <form action="" onSubmit={(e) => chat(e, message)}>
               <input
                 type="text"

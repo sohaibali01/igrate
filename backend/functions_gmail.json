@@ -1,7 +1,6 @@
 [
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_getProfile",
     "description": "Gets the current user's Gmail profile",
     "parameters": { "type": "object",
@@ -10,11 +9,9 @@
                   "URL": {"type": "string", "description": "Full URL of the HTTP request","enum":["https://gmail.googleapis.com/gmail/v1/users/me/profile"]}            
                   },
     "required": ["method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_drafts_create",
     "description": "Drafts and sends a new email",
     "parameters": { "type": "object",
@@ -35,11 +32,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request", "enum":["https://gmail.googleapis.com/gmail/v1/users/me/drafts", "https://gmail.googleapis.com/upload/gmail/v1/users/me/drafts"]}
                     },
     "required": ["method", "URL", "message"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_drafts_update",
     "description": "Update or modify an existing draft email",
     "parameters": { "type": "object",
@@ -61,11 +56,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing draft id", "enum":["https://gmail.googleapis.com/gmail/v1/users/me/drafts/{id}", "https://gmail.googleapis.com/upload/gmail/v1/users/me/drafts/{id}"]}
                     },
     "required": ["method", "URL", "message", "id"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_drafts_delete",
     "description": "Immediately and permanently deletes the specified draft. Does not simply trash it",
     "parameters": { "type": "object",
@@ -75,11 +68,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing draft id, format https://gmail.googleapis.com/gmail/v1/users/me/drafts/{id}"}
                   },
                   "required": ["id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_drafts_get",
     "description": "Gets the specified draft",
     "parameters": { "type": "object",
@@ -89,11 +80,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing draft id, format https://gmail.googleapis.com/gmail/v1/users/me/drafts/{id}"}
                   },
                   "required": [ "id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_drafts_list",
     "description": "Lists the drafts in the user's mailbox",
     "parameters": { "type": "object",
@@ -105,11 +94,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request" ,"enum":["https://gmail.googleapis.com/gmail/v1/users/me/drafts"]}
                   },
                   "required": ["method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_labels_create",
     "description": "Creates a new label",
     "parameters": { "type": "object",
@@ -127,11 +114,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request" ,"enum":["https://gmail.googleapis.com/gmail/v1/users/me/labels"]}
                   },
                   "required": [ "name", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_labels_update",
     "description": "Updates the specified label",
     "parameters": { "type": "object",
@@ -150,11 +135,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing the label id, format https://gmail.googleapis.com/gmail/v1/users/me/labels/{id}"}
                   },
                   "required": [ "id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_labels_get",
     "description": "Gets the specified label",
     "parameters": { "type": "object",
@@ -164,11 +147,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing label id, format: https://gmail.googleapis.com/gmail/v1/users/me/labels/{id}" }
                   },
                   "required": [ "id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_labels_delete",
     "description": "Immediately and permanently deletes the specified label and removes it from any messages and threads that it is applied to",
     "parameters": { "type": "object",
@@ -178,11 +159,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing label id, format: https://gmail.googleapis.com/gmail/v1/users/me/labels/{id}" }
                   },
                   "required": [ "id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_labels_list",
     "description": "Lists all labels in the user's mailbox",
     "parameters": { "type": "object",
@@ -191,11 +170,9 @@
               "URL": {"type": "string", "description": "Full URL of the HTTP request",  "enum":["https://gmail.googleapis.com/gmail/v1/users/me/labels"] }
               },
               "required": [ "method", "URL"]}
-              }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_messages_trash",
     "description": "Moves the specified message to the trash",
     "parameters": { "type": "object",
@@ -205,10 +182,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing the message id, format: https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}/trash"}
                   },
                   "required": [ "id", "method", "URL"]}
-                } },
+  },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_messages_get",
     "description": "Gets the specified message",
     "parameters": { "type": "object",
@@ -218,11 +194,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing the message id, format: https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}"}
                   },
                   "required": [ "id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_messages_list",
     "description": "Lists the messages in the user's mailbox",
     "parameters": { "type": "object",
@@ -235,11 +209,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request", "enum":["https://gmail.googleapis.com/gmail/v1/users/me/messages"]}
                   },
                   "required": [ "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_messages_modify",
     "description": "Modifies the labels on the specified message",
     "parameters": { "type": "object",
@@ -249,11 +221,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing message id, format: https://gmail.googleapis.com/gmail/v1/users/me/messages/{id}/modify"}
                  },
                   "required": [ "id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_threads_trash",
     "description": "Moves the specified thread to the trash. Any messages that belong to the thread are also moved to the trash",
     "parameters": { "type": "object",
@@ -263,11 +233,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing message id, format: https://gmail.googleapis.com/gmail/v1/users/me/threads/{id}/trash"}
                   },
                   "required": [ "id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_threads_get",
     "description": "Gets the specified thread",
     "parameters": { "type": "object",
@@ -277,11 +245,9 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing message id, format: https://gmail.googleapis.com/gmail/v1/users/me/threads/{id}"}
                   },
                   "required": [ "id", "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_threads_list",
     "description": "Lists the threads in the user's mailbox",
     "parameters": { "type": "object",
@@ -292,11 +258,9 @@
                     "labelIds": {"type": "array", "items": { "type": "string"}, "description": "Only return threads with labels that match all of the specified label IDs"}
                   },
                   "required": [ "method", "URL"]}
-                }
   },
   {
     "type": "function",
-    "function": {
     "name": "gmail_users_threads_modify",
     "description": "Modifies the labels applied to the thread. This applies to all messages in the thread",
     "parameters": { "type": "object",
@@ -306,6 +270,5 @@
                     "URL": {"type": "string", "description": "Full URL of the HTTP request containing thread id, format: https://gmail.googleapis.com/gmail/v1/users/me/threads/{id}/modify"}
                   },
                   "required": [ "id", "method", "URL"]}
-                }
   }
   ]

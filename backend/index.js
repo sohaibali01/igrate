@@ -68,6 +68,7 @@ app.post('/upload', upload.array('files'), async (req, response) => {
   }
   try {
     let fileIds = [];
+    let imageIds = [];
     await Promise.all(req.files.map(async file => {
       const filePath = `./temp/${file.originalname}`;
       if (!fs.existsSync("./temp")) {
@@ -76,19 +77,33 @@ app.post('/upload', upload.array('files'), async (req, response) => {
       }
       fs.writeFileSync(filePath, file.buffer);
 
+      // ✅ Determine if the file is an image
+      const isImage = file.mimetype.startsWith('image/');
+      console.log(file.mimetype);
       // Read each file from disk as a stream and construct the byte array
       const readStream = fs.createReadStream(filePath);
       let uploadedFile = await agent[req.body.sessionID].openAIClient.gptClient.files.create({
         file: readStream,
         purpose: 'assistants',
       });
+      console.log(file.mimetype);
       fs.unlinkSync(filePath);
-      fileIds.push(uploadedFile.id);
+            // Push ID to appropriate list
+      if (isImage) {
+        imageIds.push(uploadedFile.id);
+      } else {
+        fileIds.push(uploadedFile.id);
+      }
+      
     }));
-
-    // Do something with the byte array, like saving to a file or processing it further
-    await agent[req.body.sessionID].openAIClient.gptClient.beta.assistants.update(agent[req.body.sessionID].assistants["file"].assistant.id, { file_ids: fileIds });
-
+    
+    if (fileIds.length > 0) {
+      await agent[req.body.sessionID].assistants['global'].addFileIds(fileIds);
+    }
+    // ✅ Handle image files: update directly
+    if (imageIds.length > 0) {
+      await agent[req.body.sessionID].assistants['global'].addImageIds(imageIds);
+    }    
     response.json({
       success: true,
     });
@@ -172,16 +187,16 @@ app.post("/chat", async (request, response) => {
   let msg;
   try 
   { 
-    let jsonPrompt = `{"task":"${request.body.message}"}`;
+    let jsonPrompt = JSON.stringify({task: request.body.message});
     await agent[request.body.sessionID].processPrompt(jsonPrompt, null);
-    msg = {role: "Global Assistant", content: agent[request.body.sessionID].messages[agent[request.body.sessionID].messages.length - 1][3].reverse()[0]};
+    msg = {role: "iGrate", content: agent[request.body.sessionID].messages[agent[request.body.sessionID].messages.length - 1][3].reverse()[0]};
     response.json({
       output: msg,
     });
   }
   catch(e)
   {
-    msg = {role: "Global Assistant", content: e.toString()};
+    msg = {role: "iGrate", content: e.toString()};
     response.json({
       output: msg,
     });

@@ -1,38 +1,33 @@
 [
   {
     "type": "function",
-    "function": {
     "name": "hubspot_objects_list",
-    "description": "List or retrieve details of multiple hubspot objects including contacts, companies, deals, feedback submisssions, line items, products, quotes, taxes, tickets, goals, calls, communications, emails, meetings, notes, postal mail, tasks, owners, pipelines.",
+    "description": "List or retrieve details of multiple hubspot objects including contacts, companies, deals, line items, products, quotes, taxes, tickets, goals, calls, communications, emails, meetings, notes, postal mail, tasks",
     "parameters": { "type": "object",  
     "properties": { 
-                    "hs_object_type":  { "type": "string", "description": "Type of hubspot object: One of contacts, companies, deals, feedback submisssions, line items, products, quotes, taxes, tickets, goals, calls, communications, emails, meetings, notes, postal mail, tasks, owners, pipelines", "enum":["companies", "deals", "feedback_submisssions", "line_items", "products", "quotes", "taxes", "tickets", "goals", "calls", "communications", "emails", "meetings", "notes", "postal_mail", "tasks", "owners", "pipelines"]},
+                    "hs_object_type":  { "type": "string", "description": "Type of hubspot object: One of contacts, companies, deals, line items, products, quotes, taxes, tickets, goals, calls, communications, emails, meetings, notes, postal mail, tasks", "enum":["contacts", "companies", "deals", "line_items", "products", "quotes", "taxes", "tickets", "goals", "calls", "communications", "emails", "meetings", "notes", "postal_mail", "tasks"]},
                     "method":  { "type": "string", "description": "HTTP method type corresponding to listing records: Must be 'GET'", "enum":["GET"]},
-                    "URL":  { "type": "string", "description": "URL containing the endpoint, format (replace {hs_object_type} with the type of object): 'https://api.hubapi.com/crm/v3/objects/{hs_object_type}'"},
-                    "limit": { "type": "string", "description": "To list or read multiple records: The maximum number of results to display per page, DEFAULT VALUE is 10"},
+                    "URL":  { "type": "string", "description": "URL containing the endpoint, format 'https://api.hubapi.com/crm/v3/objects...' ", "enum":["https://api.hubapi.com/crm/v3/objects"]},
+                    "limit": { "type": "string", "description": "To list or read multiple records: The maximum number of results to display per page, DEFAULT VALUE is 10" },
                     "after": { "type": "string","description": "To list or read multiple records: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results" }                                     
                   },
-      "required": ["method", "URL"]}
-    }
+      "required": ["hs_object_type", "method", "URL"]}
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_object_read_delete",
-    "description": "Read or delete a particular object by ID in hubspot CRM. Objects include contacts, companies, deals, feedback submisssions, line items, products, quotes, taxes, tickets, goals, calls, communications, emails, meetings, notes, postal mail, tasks, owners, pipelines.",
+    "description": "Read or delete a particular object by ID in hubspot CRM. Objects include contacts, companies, deals, line items, products, quotes, taxes, tickets, goals, calls, communications, emails, meetings, notes, postal mail, tasks.",
     "parameters": { "type": "object",  
     "properties": {
-                    "hs_object_type":  { "type": "string", "description": "Type of hubspot object: One of contacts, companies, deals, feedback submisssions, line items, products, quotes, taxes, tickets, goals, calls, communications, emails, meetings, notes, postal mail, tasks, owners, pipelines", "enum":["companies", "deals", "feedback_submisssions", "line_items", "products", "quotes", "taxes", "tickets", "goals", "calls", "communications", "emails", "meetings", "notes", "postal_mail", "tasks", "owners", "pipelines"]},
+                    "hs_object_type":  { "type": "string", "description": "Type of hubspot object: One of contacts, companies, deals, line items, products, quotes, taxes, tickets, goals, calls, communications, emails, meetings, notes, postal mail, tasks", "enum":["contacts", "companies", "deals", "line_items", "products", "quotes", "taxes", "tickets", "goals", "calls", "communications", "emails", "meetings", "notes", "postal_mail", "tasks"]},
                     "method":  { "type": "string", "description": "HTTP method type representing whether the user wants to read or delete a particular contact; Either 'GET' or 'DELETE'", "enum":["GET", "DELETE"]},
-                    "URL":  { "type": "string", "description": "URL containing the endpoint, format (replace {hs_object_type} with the type of object): 'https://api.hubapi.com/crm/v3/objects/{hs_object_type}'"},
+                    "URL":  { "type": "string", "description": "URL containing the endpoint, format 'https://api.hubapi.com/crm/v3/objects...' ", "enum":["https://api.hubapi.com/crm/v3/objects"]},
                     "id":   { "type": "integer","description": "the unique identifier of the hubspot object"}                                  
                   },
-      "required": ["method", "URL"]}
-    }
+      "required": ["hs_object_type", "method", "URL"]}
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_contact_create_update",
     "description": "Create or update a particular contact in hubspot CRM",
     "parameters": { "type": "object",  
@@ -50,11 +45,9 @@
                     } }                                            
                   },
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_company_create_update",
     "description": "Create or update a particular company in hubspot CRM",
     "parameters": { "type": "object",  
@@ -72,11 +65,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_deal_create_update",
     "description": "Create or update a particular deal in hubspot CRM",
     "parameters": { "type": "object",  
@@ -94,30 +85,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
-    "name": "hubspot_feedback-Submissions_create_update",
-    "description": "Create or update a particular feedback submission in hubspot CRM",
-    "parameters": { "type": "object",  
-    "properties": { "method":  { "type": "string", "description": "HTTP method type representing whether the user wants to create or update a particular feedback submission; Either 'POST' or 'PATCH' ", "enum":["POST", "PATCH"]},
-                    "URL":  { "type": "string", "description": "URL containing the endpoint, format: 'https://api.hubapi.com/crm/v3/objects/feedback_submissions...'", "enum":["https://api.hubapi.com/crm/v3/objects/feedback_submissions"]},
-                    "id":   { "type": "integer","description": "the unique identifier of the feedback submission"}, 
-                    "properties": { "type": "object",
-                    "properties": {
-                                "additionalProp1 ": { "type": "string", "description": "Additional Property 1"},
-                                "additionalProp2 ": { "type": "string", "description": "Additional Property 2"},
-                                "additionalProp3 ": { "type": "string", "description": "Additional Property 3"}                                 
-                  }
-                }},
-      "required": ["method", "URL"]}
-    }
-  },
-  {
-    "type": "function",
-    "function": {
     "name": "hubspot_line-Items_create_update",
     "description": "Create or update a particular line item in hubspot CRM",
     "parameters": { "type": "object",  
@@ -135,12 +105,10 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
-    "name": "hubspot_products_create_update",
+     "name": "hubspot_products_create_update",
     "description": "Create or update a particular product in hubspot CRM",
     "parameters": { "type": "object",  
     "properties": { "method":  { "type": "string", "description": "HTTP method type representing whether the user wants to create or update a particular product; Either 'POST' or 'PATCH' ", "enum":["POST", "PATCH"]},
@@ -157,11 +125,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_quotes_create_update",
     "description": "Create or update a particular quote in hubspot CRM",
     "parameters": { "type": "object",  
@@ -175,11 +141,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_taxes_create_update",
     "description": "Create or update a particular tax in hubspot CRM",
     "parameters": { "type": "object",  
@@ -194,11 +158,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },  
   {
     "type": "function",
-    "function": {
     "name": "hubspot_tickets_create_update",
     "description": "Create or update a particular ticket in hubspot CRM",
     "parameters": { "type": "object",  
@@ -214,11 +176,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_goals_create_update",
     "description": "Create or update a particular goal in hubspot CRM",
     "parameters": { "type": "object",  
@@ -235,11 +195,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_calls_create_update",
     "description": "Create or update a particular call in hubspot CRM",
     "parameters": { "type": "object",  
@@ -260,11 +218,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_communications_create_update",
     "description": "Create or update a particular instant of communication in hubspot CRM",
     "parameters": { "type": "object",  
@@ -280,31 +236,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
-    "name": "hubspot_communications_create_update",
-    "description": "Create or update a particular instant of communication in hubspot CRM",
-    "parameters": { "type": "object",  
-    "properties": { "method":  { "type": "string", "description": "HTTP method type representing whether the user wants to create or update a particular instant or log of communication; Either 'POST' or 'PATCH' ", "enum":["POST", "PATCH"]},
-                    "URL":  { "type": "string", "description": "URL containing the endpoint, format: 'https://api.hubapi.com/crm/v3/objects/communications...'", "enum":["https://api.hubapi.com/crm/v3/objects/communications"]},
-                    "id":   { "type": "integer","description": "the unique identifier of the communication instant"}, 
-                    "properties": { "type": "object",
-                    "properties": {
-                                "hs_communication_body ": { "type": "string", "description": "Communication body"},
-                                "hs_timestamp ": { "type": "string", "description": "Time stamp of the call"},
-                                "hs_communication_logged_from ": { "type": "string", "description": "Communication logged from"},
-                                "hs_communication_channel_type ": { "type": "string", "description": "Communication channel type"}                               
-                  }
-                }},
-      "required": ["method", "URL"]}
-    }
-  },
-  {
-    "type": "function",
-    "function": {
     "name": "hubspot_emails_create_update",
     "description": "Create or update a particular instant of email in hubspot CRM",
     "parameters": { "type": "object",  
@@ -328,11 +262,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_meetings_create_update",
     "description": "Create or update a particular instant of meeting in hubspot CRM",
     "parameters": { "type": "object",  
@@ -354,11 +286,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_notes_create_update",
     "description": "Create or update a particular note in hubspot CRM",
     "parameters": { "type": "object",  
@@ -373,11 +303,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_postal-mail_create_update",
     "description": "Create or update a particular postal mail log in hubspot CRM",
     "parameters": { "type": "object",  
@@ -390,11 +318,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_tasks_create_update",
     "description": "Create or update a particular task in hubspot CRM",
     "parameters": { "type": "object",  
@@ -412,11 +338,9 @@
                   }
                 }},
       "required": ["method", "URL"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_associations_create",
     "description": "Create a particular association between two objects in hubspot CRM",
     "parameters": { "type": "object",  
@@ -428,11 +352,9 @@
                                 "URL":  { "type": "string", "description": "URL containing the endpoint, objectType, objectId, toObjectType and toObjectId; must follow the following format: 'https://api.hubapi.com/crm/v4/objects/{objectType}/{objectId}/associations/default/{toObjectType}/{toObjectId}'"}                                                      
                               },
       "required": ["method", "URL", "objectType", "objectId", "toObjectType", "toObjectId"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_associations_delete",
     "description": "Delete all associations between two objects in hubspot CRM",
     "parameters": { "type": "object",  
@@ -444,11 +366,9 @@
                                 "URL":  { "type": "string", "description": "URL containing the endpoint, objectType, objectId, toObjectType and toObjectId; must follow the following format: 'https://api.hubapi.com/crm/v4/objects/{objectType}/{objectId}/associations/{toObjectType}/{toObjectId}'"}                                                      
                               },
       "required": ["method", "URL", "objectType", "objectId", "toObjectType", "toObjectId"]}
-    }
   },
   {
     "type": "function",
-    "function": {
     "name": "hubspot_associations_list",
     "description": "List all associations of an object by object type in hubspot CRM",
     "parameters": { "type": "object",  
@@ -459,6 +379,5 @@
                                  "URL":  { "type": "string", "description": "URL containing the endpoint, objectType, objectId and toObjectType ; must follow the following format: 'https://api.hubapi.com/crm/v4/objects/{objectType}/{objectId}/associations/{toObjectType}'"}                                                      
                               },
       "required": ["method", "URL", "objectType", "objectId", "toObjectType"]}
-    }
   }
   ]

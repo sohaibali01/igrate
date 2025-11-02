@@ -1,6 +1,7 @@
 // SlackApi.jsx
 
-import React, { useState } from "react";
+import { useState } from "react";
+const API_URL = "http://localhost:8000";
 
 const SlackApi = ({ sessionID }) => {
   const [slackAuthenticated, setSlackAuthenticated] = useState(false);
@@ -10,7 +11,7 @@ const SlackApi = ({ sessionID }) => {
     const jsonCredentials = document.getElementById("slackJsonInput").value;
 
     try {
-      const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/authenticate/slack", {
+      const response = await fetch(`${API_URL}/authenticate/slack`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +36,7 @@ const SlackApi = ({ sessionID }) => {
         <h2>Slack</h2>
       </div>
       <div className="api-content">         
-        <div className="bullet-points-container">
+        <div className="slack-bullet-points-container">
             <li> Create your slack <a href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer"> app </a>   </li>
             <li> Select your app <span>&#x2192;</span> "OAuth & Permissions" <span>&#x2192;</span> "User Token Scopes" <span>&#x2192;</span> select your scopes <span>&#x2192;</span> "Reinstall to workspace" <span>&#x2192;</span> paste token below and hit Authenticate   </li>
         </div>

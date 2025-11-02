@@ -1,6 +1,7 @@
 // HubspotApi.jsx
 
-import React, { useState } from "react";
+import { useState } from "react";
+const API_URL = "http://localhost:8000";
 
 const HubspotApi = ({ sessionID }) => {
   const [hubspotAuthenticated, setHubspotAuthenticated] = useState(false);
@@ -11,7 +12,7 @@ const HubspotApi = ({ sessionID }) => {
 
     try {
       
-      const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/authenticate/hubspot", {
+      const response = await fetch(`${API_URL}/authenticate/hubspot`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,11 +37,11 @@ const HubspotApi = ({ sessionID }) => {
         <h2>Hubspot</h2>
       </div>
       <div className="api-content">         
-        <div className="bullet-points-container">
+        <div className="hubspot-bullet-points-container">
           <li> Create your hubspot <a href="https://developers.hubspot.com/docs/api/private-apps" target="_blank" rel="noopener noreferrer"> app </a>  </li>
           <li> Login to your hubspot account <span>&#x2192;</span> Settings <span>&#x2192;</span> Integration <span>&#x2192;</span> Private apps <span>&#x2192;</span> select app <span>&#x2192;</span> paste access token below and hit Authenticate </li>
         </div>
-        <input
+        <input 
             type="text"
             placeholder="Enter api key ..."
             id="hubspotJsonInput"

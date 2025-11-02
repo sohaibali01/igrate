@@ -22,7 +22,7 @@ html, body{
 }
 
 h1 {
-  font-size: 1.9em;
+  font-size: 1.8em;
   line-height: 1.1;
   text-align: center;
   top: 0;
@@ -37,7 +37,7 @@ h1 {
   display: block;
   font-family: 'Montserrat', sans-serif; /* Use Montserrat font */
   font-weight: 700; /* Bold */
-  font-size: 2em; /* Adjust the size as needed */
+  font-size: 1.8em; /* Adjust the size as needed */
   margin-bottom: 10px; /* Add vertical space if needed */
 }
 
@@ -65,17 +65,34 @@ p span:first-child{
   margin-right: 0;
 }
 
-.user_msg{
+.user_msg, .assistant_msg {
+  display: flex;
+  align-items: flex-start;
+  max-width: 80%;
+}
+
+/* ✅ apply wrapping only to the text, not the role */
+.msg_text {
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  flex: 1; /* let it use remaining space */
+}
+
+/* ✅ optional: keep roles visually distinct */
+.msg_role {
+  flex-shrink: 0; /* don’t allow the name to break or shrink */
+  margin-right: 4px;
+}
+
+.user_msg {
   text-align: right;
   margin-left: 30%;
-  display: flex;
   flex-direction: row-reverse;
 }
 
-.assistant_msg{
+.assistant_msg {
   text-align: left;
-  margin-right: 30%;
-  display: flex;
 }
 
 form{
@@ -94,7 +111,7 @@ input{
   height: 40px;
   border: none;
   padding: 10px;
-  font-size: 1.2rem;
+  font-size: 0.8rem;
   background-color:rgba(243, 240, 240, 0.4);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
   box-sizing: border-box;
@@ -114,6 +131,7 @@ input:focus{
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
+  flex-direction: row;
   padding: 20px;
 }
 
@@ -123,7 +141,7 @@ input:focus{
 }
 
 .api-container, .openai-container {
-  width: 100%;
+  width: 90%;
   top: 150px;
   background-color: rgba(243, 240, 240, 0.5); /* Off-white background color with 70% transparency */
   border-radius: 10px;
@@ -157,15 +175,24 @@ input:focus{
   text-align: center;
 }
 
-.bullet-points-container {
+.bullet-points-container, .hubspot-bullet-points-container, .slack-bullet-points-container {
   margin: 0 20px;
   width: 90%;
   text-align: center;
 }
 
+.hubspot-bullet-points-container {
+margin-bottom: 30px;
+}
+
+.slack-bullet-points-container {
+  margin-bottom: 30px;
+  }
+
 .api-content li {
   margin: 10px 0;
   text-align: left;
+  font-size: 0.9rem;
 }
 
 
@@ -230,13 +257,9 @@ input:focus{
 }
 
 
-
-
-
 section {
   margin-top: 20px;
 }
-
 
 .button-container {
   text-align: center;
@@ -252,8 +275,8 @@ input[type="text"] {
 }
 
 .left-column {
-  margin-right: 50px;
-  width: 30%;
+  /* margin-right: 50px; */
+  width: 33%;
 }
 
 .right-column {
@@ -327,4 +350,38 @@ input[type="text"] {
   top: 25%;
   left: 25%;
   border-radius: 4px; /* Adjust the square's border radius if needed */
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  .horizontal-container {
+    flex-direction: column;
+  }
+  .columns-container {
+    flex-direction: column;
+  }
+  .left-column {
+    width: 100%;
+  }
+  .right-column {
+    width: 100%;
+    margin-left: 0px;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  .user_msg{
+    margin-left: 0%;
+
+  }
+  .assistant_msg{
+    margin-right: 0%;
+  }
+  p{
+      max-width: 100%;
+      width: 100%;
+  }
 }

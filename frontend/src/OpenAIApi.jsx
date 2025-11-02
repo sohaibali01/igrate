@@ -1,6 +1,7 @@
 // OpenAIApi.jsx
 
-import React, { useState } from "react";
+import { useState } from "react";
+const API_URL = "http://localhost:8000";
 
 const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated,  sessionID  }) => {
  // const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
@@ -13,7 +14,7 @@ const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated,  sessionID  })
       setisAuthenticating(true);
       setOpenAIEmoji(true); 
       
-      const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/authenticate/openAI", {
+      const response = await fetch(`${API_URL}/authenticate/openai`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

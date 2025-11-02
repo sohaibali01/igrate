@@ -1,7 +1,7 @@
 // GmailApi.jsx
 
-import React, { useState } from "react";
-
+import { useState } from "react";
+const API_URL = "http://localhost:8000";
 
 const GmailApi = ({ sessionID }) => {
   const [gmailAuthenticated, setGmailAuthenticated] = useState(false);
@@ -42,7 +42,7 @@ const GmailApi = ({ sessionID }) => {
             // Proceed with further actions, such as sending the access token to the server
             try {
               
-              const response = await fetch("https://excited-lionfish-talented.ngrok-free.app/authenticate/gmail", {
+              const response = await fetch(`${API_URL}/authenticate/gmail`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
