@@ -123,4 +123,4 @@ export class GptAssistant {
         this.lastMessageTimeStamp = this.response.created_at;
         this.imageIds.length = 0;
    }
-
+}
