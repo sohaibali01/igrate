@@ -1,10 +1,9 @@
 // OpenAIApi.jsx
 
 import { useState } from "react";
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:7000";
 
 const OpenAIApi = ({ openAIAuthenticated, setOpenAIAuthenticated,  sessionID  }) => {
- // const [openAIAuthenticated, setOpenAIAuthenticated] = useState(false);
   const [showOpenAIEmoji, setOpenAIEmoji] = useState(false);
   const [isAuthenticating, setisAuthenticating] = useState(false);
 

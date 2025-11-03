@@ -1,76 +1,158 @@
 // GmailApi.jsx
+import { useState, useEffect } from "react";
+const API_URL = "http://localhost:7000";
 
-import { useState } from "react";
-const API_URL = "http://localhost:8000";
-
-const GmailApi = ({ sessionID }) => {
+const GmailApi = ({sessionID }) => {
   const [gmailAuthenticated, setGmailAuthenticated] = useState(false);
   const [showGmailEmoji, setGmailEmoji] = useState(false);
+  const [isAuthenticating, setisAuthenticating] = useState(false);
 
-  const handleGmailAuthenticate = async () => {
+  useEffect(() => {
+    // Only call on the redirect URI page
+    if (window.location.pathname === "/oauth2/callback") {
+      handleOAuthCallback();
+    }
+  }, []);
+
+  async function generatePKCE() {
+    const encoder = new TextEncoder();
+
+    // Generate random 32-byte code_verifier
+    const randomBytes = crypto.getRandomValues(new Uint8Array(32));
+    const verifier = btoa(String.fromCharCode(...randomBytes))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    // SHA256 hash for code_challenge
+    const data = encoder.encode(verifier);
+    const digest = await crypto.subtle.digest("SHA-256", data);
+    const challenge = btoa(String.fromCharCode(...new Uint8Array(digest)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    return { verifier, challenge };
+  }
+
+const handleGmailAuthenticate = async () => {
     const jsonCredentials = document.getElementById("gmailJsonInput").value;
+    setisAuthenticating(true);
+    setGmailEmoji(true); 
+    localStorage.removeItem("gmail_authenticated");
+    localStorage.setItem("jsonCredentials", jsonCredentials);
+    localStorage.setItem("sessionID", sessionID);
+    const credentials = JSON.parse(jsonCredentials);
     try {
-      // Parse the JSON credentials
-      const credentials = JSON.parse(jsonCredentials);
-  
-      // Open OAuth 2.0 endpoint in a new window
-      const oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
-      const params = {
-        'client_id': credentials.web.client_id,
-        'redirect_uri': credentials.web.redirect_uris[0],
-        'scope': 'https://mail.google.com',
-        'state': 'try_sample_request',
-        'include_granted_scopes': 'true',
-        'response_type': 'token'
-      };
-      const urlParams = new URLSearchParams(params);
-      const authUrl = `${oauth2Endpoint}?${urlParams.toString()}`;
-  
-      // Open authentication window
-      const authWindow = window.open(authUrl, '_blank');
-      setGmailEmoji(true);
+      const { verifier, challenge } = await generatePKCE();
 
-      const interval = setInterval(async () => {
-        console.log("received", authWindow.location.href);
-        if (authWindow.location.href.startsWith(credentials.web.redirect_uris[0])) {
-          const urlParams = new URLSearchParams(authWindow.location.hash.substr(1));
-          if (urlParams.has('access_token')) {
-            const accessToken = urlParams.get('access_token');
-            console.log("Access token:", accessToken);
-            clearInterval(interval);
-            authWindow.close(); // Close the authentication window once done
-            // Proceed with further actions, such as sending the access token to the server
-            try {
-              
-              const response = await fetch(`${API_URL}/authenticate/gmail`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ sessionID: sessionID, accessToken: accessToken }),
-              });
-              if (response.ok) {
-                const data = await response.json();
-                setGmailAuthenticated(data.success);
-              } else {
-                setGmailAuthenticated(false);
-              }
-            } catch (error) {
-              console.error("Error while sending access token to server:", error);
-            }
+      // Save code_verifier in localStorage (or memory) to use after redirect
+      localStorage.setItem("pkce_verifier", verifier);
 
-          } else {
-            console.log("Access token not found in URL: ", authWindow.location);
-          }
-        }
-      }, 1000);
+      // Replace these with your credentials
+      const scope = "https://mail.google.com/";
 
-      window.addEventListener('message', messageEventHandler);
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?${new URLSearchParams({
+        client_id: credentials.web.client_id,
+        redirect_uri: credentials.web.redirect_uris[0],
+        response_type: "code",
+        scope: scope,
+        access_type: "offline",
+        code_challenge: challenge,
+        code_challenge_method: "S256",
+        prompt: "consent",
+      })}`;
 
-    } catch (error) {
-      console.error("Error during authentication:", error);
+    // Open popup window
+    const width = 500;
+    const height = 600;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+
+    window.open(
+      authUrl,
+      "gmail-oauth",
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+ 
+    // Poll localStorage for result
+    const poll = setInterval(() => {
+      const authJSON = localStorage.getItem("gmail_authenticated");
+      if (authJSON) {
+        const isAuthenticated = JSON.parse(authJSON);
+        // Update UI 
+        setisAuthenticating(false);
+        setGmailAuthenticated(!!isAuthenticated);
+        // Clean up
+        localStorage.removeItem("gmail_authenticated");
+        clearInterval(poll);
+       // popup.close();
+      }
+    }, 500);
+
+    } catch (err) {
+      console.error("Error starting PKCE OAuth:", err);
     }
   };
+
+async function handleOAuthCallback() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (!code) return console.error("No code found in URL");
+
+    const verifier = localStorage.getItem("pkce_verifier");
+    if (!verifier) return console.error("No PKCE verifier found");
+
+    // Now exchange code for tokens
+    const credentials = JSON.parse(localStorage.getItem("jsonCredentials"));
+    const clientId = credentials.web.client_id;
+    const client_secret = credentials.web.client_secret;
+    const redirectUri = credentials.web.redirect_uris[0];
+
+    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: clientId,
+        client_secret: client_secret,
+        code: code,
+        code_verifier: verifier,
+        redirect_uri: redirectUri,
+        grant_type: "authorization_code",
+      }),
+    });
+
+    const tokens = await tokenResponse.json();
+    let accessToken = tokens.access_token;
+
+    const sessionID = localStorage.getItem("sessionID");
+    // Tokens include: access_token, refresh_token, expires_in, etc.
+    // You can now use the access_token to access Gmail APIs
+    try {
+        const response = await fetch(`${API_URL}/authenticate/gmail`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ sessionID: sessionID, accessToken: accessToken }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const success = !!data.success;
+          localStorage.setItem("gmail_authenticated", JSON.stringify(success));
+        } else {
+          localStorage.setItem("gmail_authenticated", JSON.stringify(false));
+        }
+        // Close popup
+        window.close();
+      } catch (error) {
+        localStorage.setItem("gmail_authenticated", JSON.stringify("false"));
+        window.close();
+        return console.error("Error while sending access token to server:", error);
+      }
+  };
+
   return (
     <div className="api-container">
       <div className="api-heading">
@@ -78,7 +160,7 @@ const GmailApi = ({ sessionID }) => {
       </div>
       <div className="api-content">         
         <div className="bullet-points-container">
-          <li> Create google <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a>  <span>&#x2192;</span> "OAuth client ID"  <span>&#x2192;</span>  "Web application" <span>&#x2192;</span> "Authorized redirect URIs: https://www.demo.igrate.ai"  <span>&#x2192;</span> "Create" 
+          <li> Create google <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer"> credentials </a>  <span>&#x2192;</span> "OAuth client ID"  <span>&#x2192;</span>  "Web application" <span>&#x2192;</span> "Authorized redirect URIs: http://localhost:5173/oauth2/callback"  <span>&#x2192;</span> "Create" 
           </li>
           <li> Download json credentials, copy json content below and hit Authenticate
           </li>
@@ -94,6 +176,18 @@ const GmailApi = ({ sessionID }) => {
         </button>
         <div className="emoji-buttons">
           { showGmailEmoji ? (
+            ( isAuthenticating ? (
+              <button
+                type="submit"
+                className={`send-button ${isAuthenticating ? 'stop-animation' : ''}`} // Add stop-animation class when isTyping is true
+              >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                  </svg>
+              </button>
+            ) : (
             gmailAuthenticated ? (
               <button className="thumbs-up">
                 <span>&#128077;&#127997;</span>
@@ -103,8 +197,9 @@ const GmailApi = ({ sessionID }) => {
                 <span>&#10060;</span>
               </button>
               ) 
-            ) : (
-            <></>
+            ) 
+          ) 
+        ) : (  <></>
           )}
         </div>
       </div>

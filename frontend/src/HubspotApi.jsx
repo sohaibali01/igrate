@@ -1,7 +1,7 @@
 // HubspotApi.jsx
 
 import { useState } from "react";
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:7000";
 
 const HubspotApi = ({ sessionID }) => {
   const [hubspotAuthenticated, setHubspotAuthenticated] = useState(false);

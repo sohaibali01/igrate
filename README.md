@@ -20,7 +20,7 @@ In addition, the support of following is also integrated via openai
 * Install the dependencies ``npm install``
 * Run the `index.js` file `node ./index.js`
 
-*That will start the backend server on port `8000`: http://localhost:8000/*
+*That will start the backend server on port `7000`: http://localhost:7000/*
 
 * Navigate into the `frontend` folder `cd frontend`
 * Install the dependencies ``npm install``

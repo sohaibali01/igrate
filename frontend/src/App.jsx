@@ -9,7 +9,7 @@ import HubspotApi from "./HubspotApi";
 import SlackApi from "./SlackApi";
 import { Helmet } from 'react-helmet'
 
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:7000";
 
 function App() {
   const [message, setMessage] = useState("");

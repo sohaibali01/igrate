@@ -9,7 +9,7 @@ const storage = multer.memoryStorage(); // Use memory storage to keep files in m
 const upload = multer({ storage: storage });
 
 const app = express();
-const port = 8000;
+const port = 7000;
 
 
 app.use(cors());

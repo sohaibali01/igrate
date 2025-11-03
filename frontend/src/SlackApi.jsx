@@ -1,7 +1,7 @@
 // SlackApi.jsx
 
 import { useState } from "react";
-const API_URL = "http://localhost:8000";
+const API_URL = "http://localhost:7000";
 
 const SlackApi = ({ sessionID }) => {
   const [slackAuthenticated, setSlackAuthenticated] = useState(false);
