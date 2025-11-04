@@ -12,6 +12,13 @@ In addition, the support of following is also integrated via openai
 * web search
 * image generation
 
+## Sample Prompts
+* fetch all of my contacts from hubspot and email the contact list to john@xyz.com
+* give me a summary of the last email that i received
+* summarize the attached file and send the summary to slack channel named general
+* describe what you see in the attached image
+* get details of my references from the attached CV and add these as contacts in hubspot
+
 ## Installation
 * Clone this repo `https://github.com/sohaibali01/igrate`
 * Navigate into the repo `cd igrate`
@@ -31,10 +38,3 @@ In addition, the support of following is also integrated via openai
 
 ## Running
 * Frontend will guide you how to authorize your apps via tokens or outh2
-
-## Sample Prompts
-* fetch all of my contacts from hubspot and email the contact list to john@xyz.com
-* give me a summary of the last email that i received
-* summarize the attached file and send the summary to slack channel named general
-* describe what you see in the attached image
-* get details of my references from the attached CV and add these as contacts in hubspot
